@@ -36,6 +36,8 @@ export function WordGrid({ words, isFetchingNextPage, onEndReached, onPressWord 
       }}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
       ListFooterComponent={
         isFetchingNextPage ? (
           <Box height={44} flexDirection="row" alignItems="center" justifyContent="center" gap="s">

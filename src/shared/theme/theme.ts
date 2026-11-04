@@ -80,6 +80,7 @@ export const theme = createTheme({
     body: { fontFamily: fonts.regular, fontSize: 15, lineHeight: 22, color: 'text' },
     bodyStrong: { fontFamily: fonts.semiBold, fontSize: 15, lineHeight: 22, color: 'text' },
     label: { fontFamily: fonts.semiBold, fontSize: 14, lineHeight: 20, color: 'text' },
+    labelStrong: { fontFamily: fonts.bold, fontSize: 14, lineHeight: 20, color: 'text' },
     caption: { fontFamily: fonts.regular, fontSize: 13, lineHeight: 18, color: 'textSecondary' },
     phonetic: { fontFamily: fonts.phonetic, fontSize: 15, lineHeight: 22, color: 'textSecondary' },
   },

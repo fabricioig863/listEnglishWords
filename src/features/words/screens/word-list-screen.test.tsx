@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 
 import type { WordsRepository } from '@/features/words/domain/words-repository';
 import { renderWithProviders } from '@/test-utils/render';
@@ -53,5 +53,21 @@ describe('WordListScreen', () => {
     await renderScreen(jest.fn().mockResolvedValue({ words: [], nextCursor: null }));
 
     expect(await screen.findByText('Nenhuma palavra encontrada')).toBeOnTheScreen();
+  });
+
+  it('filtra a lista pelo termo digitado', async () => {
+    const listWords = jest
+      .fn()
+      .mockResolvedValueOnce({ words: ['apple', 'hello'], nextCursor: null })
+      .mockResolvedValueOnce({ words: ['hello'], nextCursor: null });
+
+    await renderScreen(listWords);
+    await screen.findByText('apple');
+
+    await fireEvent.changeText(screen.getByLabelText('Buscar palavra em inglês'), 'HeL');
+
+    expect(await screen.findByText('Resultados para “hel”')).toBeOnTheScreen();
+    expect(listWords).toHaveBeenLastCalledWith(expect.objectContaining({ prefix: 'hel' }));
+    await waitFor(() => expect(screen.queryByText('apple')).not.toBeOnTheScreen());
   });
 });

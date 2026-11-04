@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useWordsRepository } from '../di';
 import { normalizePrefix } from '../domain/search-prefix';
@@ -22,5 +22,6 @@ export function useWordList(searchTerm = '') {
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     select: (data) => data.pages.flatMap((page) => page.words),
     staleTime: Infinity,
+    placeholderData: keepPreviousData,
   });
 }
