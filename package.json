@@ -5,6 +5,7 @@
   "dependencies": {
     "@expo-google-fonts/noto-sans": "^0.4.2",
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
+    "@shopify/flash-list": "2.3.2",
     "@shopify/restyle": "^2.4.5",
     "@tanstack/react-query": "^5.105.3",
     "expo": "~58.0.23",
@@ -44,6 +45,7 @@
   "jest": {
     "preset": "jest-expo",
     "moduleNameMapper": {
+      "^lucide-react-native$": "<rootDir>/node_modules/lucide-react-native/dist/cjs/lucide-react-native.js",
       "^@/assets/(.*)$": "<rootDir>/assets/$1",
       "^@/(.*)$": "<rootDir>/src/$1"
     },
@@ -51,6 +53,11 @@
       "src/**/*.{ts,tsx}",
       "!src/app/**",
       "!**/*.d.ts"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(.pnpm|react-native|@react-native|@react-native-community|expo|@expo|@expo-google-fonts|react-navigation|@react-navigation|@shopify/flash-list))",
+      "/node_modules/react-native-reanimated/plugin/",
+      "/node_modules/@react-native/babel-preset/"
     ]
   },
   "scripts": {
