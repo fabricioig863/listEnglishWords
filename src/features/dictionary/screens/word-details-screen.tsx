@@ -15,6 +15,7 @@ import { Text } from '@/shared/ui/text';
 import { HighlightedWord } from '../components/highlighted-word';
 import { MeaningsSection } from '../components/meanings-section';
 import { PhoneticChips } from '../components/phonetic-chips';
+import { MeaningsSkeleton, PhoneticChipsSkeleton } from '../components/word-details-skeleton';
 import { useWordDetails } from '../hooks/use-word-details';
 
 import { getErrorContent } from './get-error-content';
@@ -26,13 +27,17 @@ type WordDetailsScreenProps = {
 export function WordDetailsScreen({ word }: WordDetailsScreenProps) {
   const router = useRouter();
   const { spacing } = useTheme<Theme>();
-  const { data, error, isError, isFetching, refetch } = useWordDetails(word);
+  const { data, error, isPending, isError, isFetching, refetch } = useWordDetails(word);
 
   function openWiktionary() {
     WebBrowser.openBrowserAsync(`https://en.wiktionary.org/wiki/${encodeURIComponent(word)}`);
   }
 
   function renderBody() {
+    if (isPending) {
+      return <MeaningsSkeleton />;
+    }
+
     if (isError) {
       const content = getErrorContent(error, word);
 
@@ -53,7 +58,7 @@ export function WordDetailsScreen({ word }: WordDetailsScreenProps) {
       );
     }
 
-    return data ? <MeaningsSection meanings={data.meanings} /> : null;
+    return <MeaningsSection meanings={data.meanings} />;
   }
 
   return (
@@ -86,6 +91,7 @@ export function WordDetailsScreen({ word }: WordDetailsScreenProps) {
           <Card>
             <HighlightedWord word={data?.word ?? word} />
             {data ? <PhoneticChips phonetics={data.phonetics} /> : null}
+            {isPending ? <PhoneticChipsSkeleton /> : null}
           </Card>
 
           {renderBody()}

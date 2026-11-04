@@ -25,6 +25,17 @@ function renderScreen(word: string, getWordDetails: jest.Mock) {
 }
 
 describe('WordDetailsScreen', () => {
+  it('mostra o esqueleto enquanto os significados carregam', async () => {
+    await renderScreen(
+      'hello',
+      jest.fn(() => new Promise(() => {})),
+    );
+
+    expect(screen.getByTestId('meanings-skeleton')).toBeOnTheScreen();
+    expect(screen.getByText('Buscando significados…')).toBeOnTheScreen();
+    expect(screen.getByRole('header', { name: 'hello' })).toBeOnTheScreen();
+  });
+
   it('mostra a palavra e a fonética com o sotaque', async () => {
     await renderScreen('hello', jest.fn().mockResolvedValue(HELLO));
 
@@ -53,8 +64,6 @@ describe('WordDetailsScreen', () => {
     const retryButton = await screen.findByRole('button', { name: 'Tentar novamente' });
     getWordDetails.mockResolvedValue(HELLO);
     await fireEvent.press(retryButton);
-
-    await fireEvent.press(screen.getByRole('button', { name: 'Tentar novamente' }));
 
     expect(await screen.findByText('/həˈləʊ/')).toBeOnTheScreen();
   });

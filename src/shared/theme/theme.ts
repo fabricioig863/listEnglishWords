@@ -9,6 +9,7 @@ const palette = {
   gray900: '#111827',
   gray600: '#4B5563',
   gray200: '#E5E7EB',
+  gray125: '#EEF0F3',
   blue600: '#2747D6',
   blue50: '#E8ECFC',
   yellow300: '#FFE066',
@@ -38,6 +39,8 @@ export const theme = createTheme({
     inputBorder: palette.gray300,
     placeholder: palette.gray500,
     accentPressed: palette.blue800,
+    skeleton: palette.gray200,
+    skeletonSoft: palette.gray125,
   },
   spacing: {
     none: 0,
@@ -52,6 +55,7 @@ export const theme = createTheme({
   borderRadii: {
     none: 0,
     s: 12,
+    xs: 6,
     m: 14,
     l: 16,
     xl: 24,
