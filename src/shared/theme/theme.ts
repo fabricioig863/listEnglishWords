@@ -4,6 +4,7 @@ import { fonts } from './fonts';
 
 const palette = {
   gray100: '#F4F5F7',
+  gray150: '#E7E9EE',
   white: '#FFFFFF',
   gray900: '#111827',
   gray600: '#4B5563',
@@ -25,6 +26,7 @@ export const theme = createTheme({
     surface: palette.white,
     text: palette.gray900,
     textSecondary: palette.gray600,
+    segmentedBackground: palette.gray150,
     border: palette.gray200,
     accent: palette.blue600,
     accentSoft: palette.blue50,
@@ -67,7 +69,14 @@ export const theme = createTheme({
       color: 'text',
     },
     word: { fontFamily: fonts.extraBold, fontSize: 48, lineHeight: 52, color: 'text' },
-    title: { fontFamily: fonts.extraBold, fontSize: 28, lineHeight: 34, color: 'text' },
+    title: {
+      fontFamily: fonts.extraBold,
+      fontSize: 28,
+      lineHeight: 34,
+      letterSpacing: -0.5,
+      color: 'text',
+    },
+    overline: { fontFamily: fonts.semiBold, fontSize: 13, lineHeight: 18, color: 'textSecondary' },
     body: { fontFamily: fonts.regular, fontSize: 15, lineHeight: 22, color: 'text' },
     bodyStrong: { fontFamily: fonts.semiBold, fontSize: 15, lineHeight: 22, color: 'text' },
     label: { fontFamily: fonts.semiBold, fontSize: 14, lineHeight: 20, color: 'text' },

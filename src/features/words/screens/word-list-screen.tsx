@@ -3,7 +3,6 @@ import { SearchX, TriangleAlert } from 'lucide-react-native';
 import { ActivityIndicator } from 'react-native';
 
 import { Box } from '@/shared/ui/box';
-import { Screen } from '@/shared/ui/screen';
 import { StateMessage } from '@/shared/ui/state-message';
 
 import { WordGrid } from '../components/word-grid';
@@ -33,43 +32,41 @@ export function WordListScreen() {
 
   if (isPending) {
     return (
-      <Screen>
-        <Box flex={1} alignItems="center" justifyContent="center">
-          <ActivityIndicator accessibilityLabel="Carregando palavras" />
-        </Box>
-      </Screen>
+      <Box flex={1} alignItems="center" justifyContent="center">
+        <ActivityIndicator accessibilityLabel="Carregando palavras" />
+      </Box>
     );
   }
 
   if (isError) {
     return (
-      <Screen>
+      <Box flex={1}>
         <StateMessage
           icon={TriangleAlert}
           title="Não foi possível carregar as palavras"
           actionLabel="Tentar novamente"
           onAction={() => refetch()}
         />
-      </Screen>
+      </Box>
     );
   }
 
   if (words.length === 0) {
     return (
-      <Screen>
+      <Box flex={1}>
         <StateMessage icon={SearchX} title="Nenhuma palavra encontrada" />
-      </Screen>
+      </Box>
     );
   }
 
   return (
-    <Screen>
+    <Box flex={1}>
       <WordGrid
         words={words}
         isFetchingNextPage={isFetchingNextPage}
         onEndReached={handleEndReached}
         onPressWord={handlePressWord}
       />
-    </Screen>
+    </Box>
   );
 }
