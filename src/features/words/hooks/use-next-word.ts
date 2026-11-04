@@ -11,6 +11,7 @@ export function useNextWord(currentWord: string, searchTerm = '') {
 
   return useQuery({
     queryKey: wordListKeys.next(prefix, currentWord),
+    gcTime: 5 * 60 * 1000,
     queryFn: async () => {
       const page = await repository.listWords({ limit: 1, cursor: currentWord, prefix });
 

@@ -6,7 +6,7 @@ import { DictionaryError } from '../domain/dictionary-error';
 import type { DictionaryRepository } from '../domain/dictionary-repository';
 import type { WordDetails } from '../domain/word-details';
 
-import { shouldRetryWordDetails, useWordDetails } from './use-word-details';
+import { shouldRetryWordDetails, useWordDetails, wordDetailsKeys } from './use-word-details';
 
 const HELLO: WordDetails = {
   word: 'hello',
@@ -55,7 +55,7 @@ describe('shouldRetryWordDetails', () => {
   it.each([
     [0, 'server', true],
     [1, 'network', true],
-    [1, 'timeout', true],
+    [0, 'timeout', false],
     [2, 'server', false],
     [0, 'not-found', false],
     [0, 'invalid-response', false],
@@ -65,5 +65,16 @@ describe('shouldRetryWordDetails', () => {
 
   it('não repete erros desconhecidos', () => {
     expect(shouldRetryWordDetails(0, new Error('boom'))).toBe(false);
+  });
+
+  it('marca a consulta para ser persistida em disco', async () => {
+    const getWordDetails = jest.fn().mockResolvedValue(HELLO);
+
+    const { result, queryClient } = await renderUseWordDetails('hello', getWordDetails);
+
+    await waitFor(() => expect(result.current.data).toEqual(HELLO));
+
+    const query = queryClient.getQueryCache().find({ queryKey: wordDetailsKeys.detail('hello') });
+    expect(query?.meta).toEqual({ persist: true });
   });
 });

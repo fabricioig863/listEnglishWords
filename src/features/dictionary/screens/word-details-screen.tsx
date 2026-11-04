@@ -1,7 +1,7 @@
 import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
-import { ArrowLeft, ExternalLink } from 'lucide-react-native';
+import { ArrowLeft, ExternalLink, WifiOff } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { ActivityIndicator, ScrollView } from 'react-native';
 
@@ -29,13 +29,23 @@ type WordDetailsScreenProps = {
 export function WordDetailsScreen({ word, footer }: WordDetailsScreenProps) {
   const router = useRouter();
   const { spacing } = useTheme<Theme>();
-  const { data, error, isPending, isError, isFetching, refetch } = useWordDetails(word);
+  const { data, error, isPending, isPaused, isError, isFetching, refetch } = useWordDetails(word);
 
   function openWiktionary() {
     WebBrowser.openBrowserAsync(`https://en.wiktionary.org/wiki/${encodeURIComponent(word)}`);
   }
 
   function renderBody() {
+    if (isPaused && isPending) {
+      return (
+        <StateMessage
+          icon={WifiOff}
+          title="Você está offline"
+          description="Os significados aparecem assim que a conexão voltar."
+        />
+      );
+    }
+
     if (isPending) {
       return <MeaningsSkeleton />;
     }
@@ -93,7 +103,7 @@ export function WordDetailsScreen({ word, footer }: WordDetailsScreenProps) {
           <Card>
             <HighlightedWord word={data?.word ?? word} />
             {data ? <PhoneticChips phonetics={data.phonetics} /> : null}
-            {isPending ? <PhoneticChipsSkeleton /> : null}
+            {isPending && !isPaused ? <PhoneticChipsSkeleton /> : null}
           </Card>
 
           {renderBody()}

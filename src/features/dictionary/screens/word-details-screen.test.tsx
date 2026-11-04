@@ -1,3 +1,4 @@
+import { onlineManager } from '@tanstack/react-query';
 import { fireEvent, screen } from '@testing-library/react-native';
 import * as WebBrowser from 'expo-web-browser';
 
@@ -25,6 +26,8 @@ function renderScreen(word: string, getWordDetails: jest.Mock) {
 }
 
 describe('WordDetailsScreen', () => {
+  afterEach(() => onlineManager.setOnline(true));
+
   it('mostra o esqueleto enquanto os significados carregam', async () => {
     await renderScreen(
       'hello',
@@ -34,6 +37,17 @@ describe('WordDetailsScreen', () => {
     expect(screen.getByTestId('meanings-skeleton')).toBeOnTheScreen();
     expect(screen.getByText('Buscando significados…')).toBeOnTheScreen();
     expect(screen.getByRole('header', { name: 'hello' })).toBeOnTheScreen();
+  });
+
+  it('avisa que está offline e não mostra o esqueleto', async () => {
+    onlineManager.setOnline(false);
+    const getWordDetails = jest.fn();
+
+    await renderScreen('hello', getWordDetails);
+
+    expect(await screen.findByText('Você está offline')).toBeOnTheScreen();
+    expect(screen.queryByTestId('meanings-skeleton')).not.toBeOnTheScreen();
+    expect(getWordDetails).not.toHaveBeenCalled();
   });
 
   it('mostra a palavra e a fonética com o sotaque', async () => {

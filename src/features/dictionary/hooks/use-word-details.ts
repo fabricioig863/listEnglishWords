@@ -3,11 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useDictionaryRepository } from '../di';
 import { isDictionaryError, type DictionaryErrorKind } from '../domain/dictionary-error';
 
-const RETRYABLE_ERRORS: ReadonlySet<DictionaryErrorKind> = new Set([
-  'server',
-  'network',
-  'timeout',
-]);
+const RETRYABLE_ERRORS: ReadonlySet<DictionaryErrorKind> = new Set(['server', 'network']);
 const MAX_RETRIES = 2;
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -28,6 +24,7 @@ export function useWordDetails(word: string) {
     queryFn: ({ signal }) => repository.getWordDetails(word, signal),
     retry: shouldRetryWordDetails,
     staleTime: ONE_DAY_MS,
+    meta: { persist: true },
     enabled: word.length > 0,
   });
 }

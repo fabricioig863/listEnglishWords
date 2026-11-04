@@ -13,7 +13,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
 import { AppDependencies } from '@/di/app-dependencies';
+import { setupOnlineManager } from '@/shared/lib/online-manager';
 import { AppProviders } from '@/shared/providers/app-providers';
+
+SplashScreen.preventAutoHideAsync();
+setupOnlineManager();
 
 SplashScreen.preventAutoHideAsync();
 
