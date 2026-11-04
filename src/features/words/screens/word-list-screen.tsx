@@ -38,7 +38,10 @@ export function WordListScreen() {
   }
 
   function handlePressWord(word: string) {
-    router.push({ pathname: '/word/[word]', params: { word } });
+    router.push({
+      pathname: '/word/[word]',
+      params: searchPrefix ? { word, q: searchPrefix } : { word },
+    });
   }
 
   function renderContent() {

@@ -7,6 +7,7 @@ import {
   type RenderOptions,
 } from '@testing-library/react-native';
 import type { PropsWithChildren, ReactElement } from 'react';
+import { SafeAreaProvider, type Metrics } from 'react-native-safe-area-context';
 
 import { DictionaryRepositoryProvider } from '@/features/dictionary/di';
 import type { DictionaryRepository } from '@/features/dictionary/domain/dictionary-repository';
@@ -22,6 +23,11 @@ export type TestDependencies = {
 type ProviderOptions = {
   queryClient?: QueryClient;
   dependencies?: TestDependencies;
+};
+
+const TEST_SAFE_AREA: Metrics = {
+  frame: { x: 0, y: 0, width: 390, height: 844 },
+  insets: { top: 47, right: 0, bottom: 34, left: 0 },
 };
 
 export function createTestQueryClient() {
@@ -56,7 +62,11 @@ function createWrapper({
       );
     }
 
-    return <QueryClientProvider client={queryClient}>{content}</QueryClientProvider>;
+    return (
+      <SafeAreaProvider initialMetrics={TEST_SAFE_AREA}>
+        <QueryClientProvider client={queryClient}>{content}</QueryClientProvider>
+      </SafeAreaProvider>
+    );
   };
 }
 

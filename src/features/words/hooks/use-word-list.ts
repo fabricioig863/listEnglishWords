@@ -8,6 +8,7 @@ export const WORD_LIST_PAGE_SIZE = 60;
 export const wordListKeys = {
   all: ['words'] as const,
   list: (prefix: string) => ['words', 'list', prefix] as const,
+  next: (prefix: string, word: string) => ['words', 'next', prefix, word] as const,
 };
 
 export function useWordList(searchTerm = '') {

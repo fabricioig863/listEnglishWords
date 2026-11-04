@@ -2,6 +2,7 @@ import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { ArrowLeft, ExternalLink } from 'lucide-react-native';
+import type { ReactNode } from 'react';
 import { ActivityIndicator, ScrollView } from 'react-native';
 
 import type { Theme } from '@/shared/theme/theme';
@@ -22,9 +23,10 @@ import { getErrorContent } from './get-error-content';
 
 type WordDetailsScreenProps = {
   word: string;
+  footer?: ReactNode;
 };
 
-export function WordDetailsScreen({ word }: WordDetailsScreenProps) {
+export function WordDetailsScreen({ word, footer }: WordDetailsScreenProps) {
   const router = useRouter();
   const { spacing } = useTheme<Theme>();
   const { data, error, isPending, isError, isFetching, refetch } = useWordDetails(word);
@@ -62,7 +64,7 @@ export function WordDetailsScreen({ word }: WordDetailsScreenProps) {
   }
 
   return (
-    <Screen edges={['top', 'bottom']}>
+    <Screen edges={['top']}>
       <Box flex={1} paddingHorizontal="screen" paddingTop="s">
         <Box flexDirection="row" alignItems="center" justifyContent="space-between">
           <IconButton
@@ -97,6 +99,8 @@ export function WordDetailsScreen({ word }: WordDetailsScreenProps) {
           {renderBody()}
         </ScrollView>
       </Box>
+
+      {footer}
     </Screen>
   );
 }
