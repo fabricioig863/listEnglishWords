@@ -21,6 +21,6 @@ module.exports = defineConfig([
     },
   },
   {
-    ignores: ['dist/*', 'ios/*', 'android/*', 'coverage/*'],
+    ignores: ['dist/*', 'ios/*', 'android/*', 'coverage/*', 'expo-env.d.ts'],
   },
 ]);
