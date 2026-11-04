@@ -1,0 +1,79 @@
+import { createTheme } from '@shopify/restyle';
+
+import { fonts } from './fonts';
+
+const palette = {
+  gray100: '#F4F5F7',
+  white: '#FFFFFF',
+  gray900: '#111827',
+  gray600: '#4B5563',
+  gray200: '#E5E7EB',
+  blue600: '#2747D6',
+  blue50: '#E8ECFC',
+  yellow300: '#FFE066',
+  pink600: '#E0245E',
+  rose700: '#BE123C',
+  rose50: '#FFF5F7',
+  gray300: '#D1D5DB',
+  gray500: '#6B7280',
+  blue800: '#1C35A8',
+};
+
+export const theme = createTheme({
+  colors: {
+    background: palette.gray100,
+    surface: palette.white,
+    text: palette.gray900,
+    textSecondary: palette.gray600,
+    border: palette.gray200,
+    accent: palette.blue600,
+    accentSoft: palette.blue50,
+    onAccent: palette.white,
+    highlight: palette.yellow300,
+    favorite: palette.pink600,
+    danger: palette.rose700,
+    dangerSoft: palette.rose50,
+    inputBorder: palette.gray300,
+    placeholder: palette.gray500,
+    accentPressed: palette.blue800,
+  },
+  spacing: {
+    none: 0,
+    xs: 4,
+    s: 8,
+    m: 12,
+    l: 16,
+    screen: 20,
+    xl: 24,
+    xxl: 32,
+  },
+  borderRadii: {
+    none: 0,
+    s: 12,
+    m: 14,
+    l: 16,
+    xl: 24,
+    pill: 999,
+  },
+  breakpoints: {
+    phone: 0,
+    tablet: 768,
+  },
+  textVariants: {
+    defaults: {
+      fontFamily: fonts.regular,
+      fontSize: 15,
+      lineHeight: 22,
+      color: 'text',
+    },
+    word: { fontFamily: fonts.extraBold, fontSize: 48, lineHeight: 52, color: 'text' },
+    title: { fontFamily: fonts.extraBold, fontSize: 28, lineHeight: 34, color: 'text' },
+    body: { fontFamily: fonts.regular, fontSize: 15, lineHeight: 22, color: 'text' },
+    bodyStrong: { fontFamily: fonts.semiBold, fontSize: 15, lineHeight: 22, color: 'text' },
+    label: { fontFamily: fonts.semiBold, fontSize: 14, lineHeight: 20, color: 'text' },
+    caption: { fontFamily: fonts.regular, fontSize: 13, lineHeight: 18, color: 'textSecondary' },
+    phonetic: { fontFamily: fonts.phonetic, fontSize: 15, lineHeight: 22, color: 'textSecondary' },
+  },
+});
+
+export type Theme = typeof theme;
