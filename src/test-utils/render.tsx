@@ -8,12 +8,15 @@ import {
 } from '@testing-library/react-native';
 import type { PropsWithChildren, ReactElement } from 'react';
 
+import { DictionaryRepositoryProvider } from '@/features/dictionary/di';
+import type { DictionaryRepository } from '@/features/dictionary/domain/dictionary-repository';
 import { WordsRepositoryProvider } from '@/features/words/di';
 import type { WordsRepository } from '@/features/words/domain/words-repository';
 import { theme } from '@/shared/theme/theme';
 
 export type TestDependencies = {
   wordsRepository?: WordsRepository;
+  dictionaryRepository?: DictionaryRepository;
 };
 
 type ProviderOptions = {
@@ -42,6 +45,14 @@ function createWrapper({
         <WordsRepositoryProvider value={dependencies.wordsRepository}>
           {content}
         </WordsRepositoryProvider>
+      );
+    }
+
+    if (dependencies.dictionaryRepository) {
+      content = (
+        <DictionaryRepositoryProvider value={dependencies.dictionaryRepository}>
+          {content}
+        </DictionaryRepositoryProvider>
       );
     }
 
