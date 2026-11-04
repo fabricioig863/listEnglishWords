@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Criar conta · Dicionário</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+*{-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111827}
+a{color:#2747D6}a:hover{color:#1C35A8}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #2747D6;outline-offset:2px}
+input::placeholder{color:#6B7280}
+.phone{width:390px;height:844px;border-radius:32px;overflow:hidden;box-shadow:0 1px 2px rgba(17,24,39,.08),0 24px 64px rgba(17,24,39,.16);flex:none;background:#F4F5F7}
+
+body{min-height:100vh;background:#DDE1E8;display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 16px 40px;box-sizing:border-box}
+.top{width:390px;max-width:100%;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:#374151}
+.top a{text-decoration:none;font-weight:700}
+@media (max-width:430px){body{padding:0;background:#F4F5F7}.top{display:none}.phone{border-radius:0;box-shadow:none}}
+@media (max-width:389px){.phone{zoom:.92}}
+</style>
+</head>
+<body>
+<div class="top"><a href="index.html">← Todas as telas</a><span>02 · Criar conta</span></div>
+<main class="phone">
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 56px 24px 34px; background: #F4F5F7; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #111827; display: flex; flex-direction: column; position: relative; overflow: hidden">
+  <a href="login.html" aria-label="Voltar para o login" style="width: 44px; height: 44px; box-sizing: border-box; border-radius: 999px; border: 1px solid #E5E7EB; background: #FFFFFF; display: flex; align-items: center; justify-content: center">
+    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+  </a>
+
+  <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 8px">
+    <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 800; letter-spacing: -0.02em">Criar <span style="box-shadow: inset 0 -10px 0 #FFE066">conta</span></h1>
+    <p style="margin: 0; font-size: 16px; line-height: 24px; color: #4B5563">Seus favoritos e o histórico de palavras ficam ligados a ela, em qualquer aparelho.</p>
+  </div>
+
+  <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <label for="nome" style="font-size: 14px; font-weight: 600; color: #111827">Nome</label>
+      <div style="position: relative">
+        <svg aria-hidden="true" style="position: absolute; left: 16px; top: 16px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 0 0-16 0"></path></svg>
+        <input id="nome" type="text" autocomplete="name" value="Fabricio" placeholder="Como podemos te chamar?" style="width: 100%; box-sizing: border-box; height: 52px; padding: 0 16px 0 46px; border: 1px solid #D1D5DB; border-radius: 14px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #111827">
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <label for="novo-email" style="font-size: 14px; font-weight: 600; color: #111827">E-mail</label>
+      <div style="position: relative">
+        <svg aria-hidden="true" style="position: absolute; left: 16px; top: 16px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+        <input id="novo-email" type="email" autocomplete="email" value="fabricio@email.com" placeholder="voce@email.com" style="width: 100%; box-sizing: border-box; height: 52px; padding: 0 16px 0 46px; border: 1px solid #D1D5DB; border-radius: 14px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #111827">
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <label for="nova-senha" style="font-size: 14px; font-weight: 600; color: #111827">Senha</label>
+      <div style="position: relative">
+        <svg aria-hidden="true" style="position: absolute; left: 16px; top: 16px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <input id="nova-senha" type="password" autocomplete="new-password" value="palavra1" aria-describedby="senha-dica" style="width: 100%; box-sizing: border-box; height: 52px; padding: 0 52px 0 46px; border: 1px solid #D1D5DB; border-radius: 14px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #111827">
+        <button type="button" aria-label="Mostrar senha" style="position: absolute; right: 4px; top: 4px; width: 44px; height: 44px; border: 0; border-radius: 10px; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </button>
+      </div>
+      <p id="senha-dica" style="margin: 0; display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 18px; font-weight: 600; color: #2747D6">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2747D6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        Pelo menos 6 caracteres
+      </p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <label for="confirmar-senha" style="font-size: 14px; font-weight: 600; color: #111827">Confirmar senha</label>
+      <div style="position: relative">
+        <svg aria-hidden="true" style="position: absolute; left: 16px; top: 16px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <input id="confirmar-senha" type="password" autocomplete="new-password" value="palavra" aria-invalid="true" aria-describedby="confirmar-erro" style="width: 100%; box-sizing: border-box; height: 52px; padding: 0 16px 0 46px; border: 2px solid #BE123C; border-radius: 14px; background: #FFF5F7; font-family: inherit; font-size: 16px; color: #111827">
+      </div>
+      <p id="confirmar-erro" role="alert" style="margin: 0; display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 18px; font-weight: 600; color: #BE123C">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
+        As senhas não conferem
+      </p>
+    </div>
+  </div>
+
+  <a href="lista.html" style="margin-top: 24px; height: 52px; border-radius: 14px; background: #2747D6; color: #FFFFFF; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Criar conta</a>
+
+  <p style="margin: 8px 0 0; display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 14px; color: #4B5563">Já tem conta?
+    <a href="login.html" style="height: 44px; padding: 0 4px; display: flex; align-items: center; font-size: 14px; font-weight: 700; color: #2747D6; text-decoration: none">Entrar</a>
+  </p>
+</div>
+</main>
+</body>
+</html>

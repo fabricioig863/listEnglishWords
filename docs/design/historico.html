@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Histórico · Dicionário</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+*{-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111827}
+a{color:#2747D6}a:hover{color:#1C35A8}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #2747D6;outline-offset:2px}
+input::placeholder{color:#6B7280}
+.phone{width:390px;height:844px;border-radius:32px;overflow:hidden;box-shadow:0 1px 2px rgba(17,24,39,.08),0 24px 64px rgba(17,24,39,.16);flex:none;background:#F4F5F7}
+
+body{min-height:100vh;background:#DDE1E8;display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 16px 40px;box-sizing:border-box}
+.top{width:390px;max-width:100%;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:#374151}
+.top a{text-decoration:none;font-weight:700}
+@media (max-width:430px){body{padding:0;background:#F4F5F7}.top{display:none}.phone{border-radius:0;box-shadow:none}}
+@media (max-width:389px){.phone{zoom:.92}}
+</style>
+</head>
+<body>
+<div class="top"><a href="index.html">← Todas as telas</a><span>07 · Histórico</span></div>
+<main class="phone">
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 56px 20px 34px; background: #F4F5F7; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #111827; display: flex; flex-direction: column; position: relative; overflow: hidden">
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <p style="margin: 0; font-size: 13px; line-height: 18px; font-weight: 600; color: #4B5563">Inglês → significados</p>
+      <h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 800; letter-spacing: -0.02em">Dicionário</h1>
+    </div>
+    <a href="login.html" aria-label="Conta e sair" style="width: 44px; height: 44px; box-sizing: border-box; border-radius: 999px; border: 1px solid #E5E7EB; background: #FFFFFF; display: flex; align-items: center; justify-content: center">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 0 0-16 0"></path></svg>
+    </a>
+  </header>
+
+  <nav aria-label="Seções" style="margin-top: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; background: #E7E9EE; border-radius: 14px">
+    <a href="lista.html" style="height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #4B5563; text-decoration: none">Palavras</a>
+    <a href="historico.html" aria-current="page" style="height: 44px; border-radius: 10px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(17, 24, 39, 0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #111827; text-decoration: none">Histórico</a>
+    <a href="favoritos.html" style="height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #4B5563; text-decoration: none">Favoritos</a>
+  </nav>
+
+  <div style="margin-top: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+    <h2 style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 800">Vistas recentemente</h2>
+    <button type="button" style="height: 44px; padding: 0 4px 0 8px; border: 0; background: transparent; display: flex; align-items: center; gap: 6px; font-family: inherit; font-size: 14px; font-weight: 700; color: #4B5563; cursor: pointer">
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+      Limpar
+    </button>
+  </div>
+
+  <div style="flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column">
+    <h3 style="margin: 12px 0 8px; font-size: 12px; line-height: 16px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #4B5563">Hoje</h3>
+    <div style="display: flex; flex-direction: column; gap: 1px; background: #EEF0F3; border-radius: 16px; overflow: hidden; border: 1px solid #E5E7EB">
+      <a href="sem-definicao.html" style="height: 64px; box-sizing: border-box; padding: 0 12px 0 16px; background: #FFFFFF; display: flex; align-items: center; gap: 12px; color: #111827; text-decoration: none">
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span lang="en" style="font-size: 16px; line-height: 22px; font-weight: 700">helluo</span>
+          <span style="font-size: 13px; line-height: 18px; color: #4B5563">Sem definição</span>
+        </div>
+        <span style="font-size: 13px; font-weight: 600; color: #4B5563">10:43</span>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+      </a>
+      <a href="detalhe.html" style="height: 64px; box-sizing: border-box; padding: 0 12px 0 16px; background: #FFFFFF; display: flex; align-items: center; gap: 12px; color: #111827; text-decoration: none">
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 16px; line-height: 22px; font-weight: 700"><span lang="en">hello</span><svg role="img" aria-label="favorita" width="12" height="12" viewBox="0 0 24 24" fill="#E0245E" stroke="#E0245E" stroke-width="2" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></span>
+          <span style="font-size: 13px; line-height: 18px; color: #4B5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-family: 'Noto Sans', sans-serif">/həˈləʊ/</span> · interjection</span>
+        </div>
+        <span style="font-size: 13px; font-weight: 600; color: #4B5563">10:42</span>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+      </a>
+      <a href="detalhe.html" style="height: 64px; box-sizing: border-box; padding: 0 12px 0 16px; background: #FFFFFF; display: flex; align-items: center; gap: 12px; color: #111827; text-decoration: none">
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span lang="en" style="font-size: 16px; line-height: 22px; font-weight: 700">helium</span>
+          <span style="font-size: 13px; line-height: 18px; color: #4B5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-family: 'Noto Sans', sans-serif">/ˈhiːli.əm/</span> · noun</span>
+        </div>
+        <span style="font-size: 13px; font-weight: 600; color: #4B5563">10:36</span>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+      </a>
+      <a href="detalhe.html" style="height: 64px; box-sizing: border-box; padding: 0 12px 0 16px; background: #FFFFFF; display: flex; align-items: center; gap: 12px; color: #111827; text-decoration: none">
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 16px; line-height: 22px; font-weight: 700"><span lang="en">serendipity</span><svg role="img" aria-label="favorita" width="12" height="12" viewBox="0 0 24 24" fill="#E0245E" stroke="#E0245E" stroke-width="2" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></span>
+          <span style="font-size: 13px; line-height: 18px; color: #4B5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-family: 'Noto Sans', sans-serif">/ˌsɛɹ.ənˈdɪp.ɪ.ti/</span> · noun</span>
+        </div>
+        <span style="font-size: 13px; font-weight: 600; color: #4B5563">09:15</span>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+      </a>
+    </div>
+
+    <h3 style="margin: 20px 0 8px; font-size: 12px; line-height: 16px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #4B5563">Ontem</h3>
+    <div style="display: flex; flex-direction: column; gap: 1px; background: #EEF0F3; border-radius: 16px; overflow: hidden; border: 1px solid #E5E7EB">
+      <a href="detalhe.html" style="height: 64px; box-sizing: border-box; padding: 0 12px 0 16px; background: #FFFFFF; display: flex; align-items: center; gap: 12px; color: #111827; text-decoration: none">
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 16px; line-height: 22px; font-weight: 700"><span lang="en">ephemeral</span><svg role="img" aria-label="favorita" width="12" height="12" viewBox="0 0 24 24" fill="#E0245E" stroke="#E0245E" stroke-width="2" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></span>
+          <span style="font-size: 13px; line-height: 18px; color: #4B5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-family: 'Noto Sans', sans-serif">/ɪˈfɛm(ə)ɹəl/</span> · adjective</span>
+        </div>
+        <span style="font-size: 13px; font-weight: 600; color: #4B5563">21:14</span>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+      </a>
+      <a href="detalhe.html" style="height: 64px; box-sizing: border-box; padding: 0 12px 0 16px; background: #FFFFFF; display: flex; align-items: center; gap: 12px; color: #111827; text-decoration: none">
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 16px; line-height: 22px; font-weight: 700"><span lang="en">resilience</span><svg role="img" aria-label="favorita" width="12" height="12" viewBox="0 0 24 24" fill="#E0245E" stroke="#E0245E" stroke-width="2" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg></span>
+          <span style="font-size: 13px; line-height: 18px; color: #4B5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-family: 'Noto Sans', sans-serif">/ɹɪˈzɪl.jəns/</span> · noun</span>
+        </div>
+        <span style="font-size: 13px; font-weight: 600; color: #4B5563">20:57</span>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+      </a>
+      <a href="detalhe.html" style="height: 64px; box-sizing: border-box; padding: 0 12px 0 16px; background: #FFFFFF; display: flex; align-items: center; gap: 12px; color: #111827; text-decoration: none">
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span lang="en" style="font-size: 16px; line-height: 22px; font-weight: 700">wanderlust</span>
+          <span style="font-size: 13px; line-height: 18px; color: #4B5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-family: 'Noto Sans', sans-serif">/ˈwɒndəlʌst/</span> · noun</span>
+        </div>
+        <span style="font-size: 13px; font-weight: 600; color: #4B5563">20:50</span>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+      </a>
+    </div>
+  </div>
+</div>
+</main>
+</body>
+</html>

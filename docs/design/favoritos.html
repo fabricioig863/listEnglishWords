@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Favoritos · Dicionário</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+*{-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#111827}
+a{color:#2747D6}a:hover{color:#1C35A8}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #2747D6;outline-offset:2px}
+input::placeholder{color:#6B7280}
+.phone{width:390px;height:844px;border-radius:32px;overflow:hidden;box-shadow:0 1px 2px rgba(17,24,39,.08),0 24px 64px rgba(17,24,39,.16);flex:none;background:#F4F5F7}
+
+body{min-height:100vh;background:#DDE1E8;display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 16px 40px;box-sizing:border-box}
+.top{width:390px;max-width:100%;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:#374151}
+.top a{text-decoration:none;font-weight:700}
+@media (max-width:430px){body{padding:0;background:#F4F5F7}.top{display:none}.phone{border-radius:0;box-shadow:none}}
+@media (max-width:389px){.phone{zoom:.92}}
+</style>
+</head>
+<body>
+<div class="top"><a href="index.html">← Todas as telas</a><span>08 · Favoritos</span></div>
+<main class="phone">
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 56px 20px 34px; background: #F4F5F7; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #111827; display: flex; flex-direction: column; position: relative; overflow: hidden">
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <p style="margin: 0; font-size: 13px; line-height: 18px; font-weight: 600; color: #4B5563">Inglês → significados</p>
+      <h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 800; letter-spacing: -0.02em">Dicionário</h1>
+    </div>
+    <a href="login.html" aria-label="Conta e sair" style="width: 44px; height: 44px; box-sizing: border-box; border-radius: 999px; border: 1px solid #E5E7EB; background: #FFFFFF; display: flex; align-items: center; justify-content: center">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 0 0-16 0"></path></svg>
+    </a>
+  </header>
+
+  <nav aria-label="Seções" style="margin-top: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; background: #E7E9EE; border-radius: 14px">
+    <a href="lista.html" style="height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #4B5563; text-decoration: none">Palavras</a>
+    <a href="historico.html" style="height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #4B5563; text-decoration: none">Histórico</a>
+    <a href="favoritos.html" aria-current="page" style="height: 44px; border-radius: 10px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(17, 24, 39, 0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #111827; text-decoration: none">Favoritos</a>
+  </nav>
+
+  <div style="margin-top: 20px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
+    <h2 style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 800">Suas palavras</h2>
+    <span style="font-size: 13px; font-weight: 600; color: #4B5563">4 salvas</span>
+  </div>
+
+  <div style="margin-top: 12px; flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 10px">
+    <article style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 14px 8px 14px 16px; display: flex; align-items: center; gap: 8px">
+      <a href="detalhe.html" style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; color: #111827; text-decoration: none">
+        <span lang="en" style="font-size: 18px; line-height: 24px; font-weight: 800">hello</span>
+        <span style="font-family: 'Noto Sans', sans-serif; font-size: 14px; line-height: 20px; color: #4B5563">/həˈləʊ/</span>
+        <span lang="en" style="font-size: 14px; line-height: 20px; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-weight: 700; color: #1C35A8">interjection</span> · A greeting (salutation) said when meeting someone or acknowledging someone’s arrival.</span>
+      </a>
+      <button type="button" aria-label="Remover hello dos favoritos" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 999px; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="#E0245E" stroke="#E0245E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+      </button>
+    </article>
+    <article style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 14px 8px 14px 16px; display: flex; align-items: center; gap: 8px">
+      <a href="detalhe.html" style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; color: #111827; text-decoration: none">
+        <span lang="en" style="font-size: 18px; line-height: 24px; font-weight: 800">serendipity</span>
+        <span style="font-family: 'Noto Sans', sans-serif; font-size: 14px; line-height: 20px; color: #4B5563">/ˌsɛɹ.ənˈdɪp.ɪ.ti/</span>
+        <span lang="en" style="font-size: 14px; line-height: 20px; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-weight: 700; color: #1C35A8">noun</span> · A combination of events which have come together by chance to make a surprisingly good outcome.</span>
+      </a>
+      <button type="button" aria-label="Remover serendipity dos favoritos" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 999px; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="#E0245E" stroke="#E0245E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.050 3 5.5l7 7Z"></path></svg>
+      </button>
+    </article>
+    <article style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 14px 8px 14px 16px; display: flex; align-items: center; gap: 8px">
+      <a href="detalhe.html" style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; color: #111827; text-decoration: none">
+        <span lang="en" style="font-size: 18px; line-height: 24px; font-weight: 800">ephemeral</span>
+        <span style="font-family: 'Noto Sans', sans-serif; font-size: 14px; line-height: 20px; color: #4B5563">/ɪˈfɛm(ə)ɹəl/</span>
+        <span lang="en" style="font-size: 14px; line-height: 20px; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-weight: 700; color: #1C35A8">adjective</span> · Lasting for a short period of time.</span>
+      </a>
+      <button type="button" aria-label="Remover ephemeral dos favoritos" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 999px; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="#E0245E" stroke="#E0245E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+      </button>
+    </article>
+    <article style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 14px 8px 14px 16px; display: flex; align-items: center; gap: 8px">
+      <a href="detalhe.html" style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; color: #111827; text-decoration: none">
+        <span lang="en" style="font-size: 18px; line-height: 24px; font-weight: 800">resilience</span>
+        <span style="font-family: 'Noto Sans', sans-serif; font-size: 14px; line-height: 20px; color: #4B5563">/ɹɪˈzɪl.jəns/</span>
+        <span lang="en" style="font-size: 14px; line-height: 20px; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-weight: 700; color: #1C35A8">noun</span> · The physical property of material that can resume its shape after being stretched or deformed.</span>
+      </a>
+      <button type="button" aria-label="Remover resilience dos favoritos" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 999px; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="#E0245E" stroke="#E0245E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+      </button>
+    </article>
+  </div>
+
+  <div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 34px; background: #111827; border-radius: 14px; padding: 6px 6px 6px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 12px 32px rgba(17, 24, 39, 0.25)">
+    <span style="font-size: 14px; line-height: 20px; font-weight: 500; color: #FFFFFF">“wanderlust” removida dos favoritos</span>
+    <button type="button" style="height: 44px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; font-family: inherit; font-size: 14px; font-weight: 800; color: #B4C2FF; cursor: pointer">Desfazer</button>
+  </div>
+</div>
+</main>
+</body>
+</html>
