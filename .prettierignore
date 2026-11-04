@@ -1,0 +1,7 @@
+node_modules
+ios
+android
+.expo
+coverage
+docs/design
+assets/expo.icon
