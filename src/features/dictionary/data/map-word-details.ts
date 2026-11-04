@@ -1,5 +1,6 @@
-import type { DictionaryResponseDto } from './dictionary-api-schema';
 import type { Accent, Meaning, PhoneticText, WordAudio, WordDetails } from '../domain/word-details';
+
+import type { DictionaryResponseDto } from './dictionary-api-schema';
 
 const ACCENT_IN_AUDIO_URL = /-(uk|us|au)\.mp3$/i;
 

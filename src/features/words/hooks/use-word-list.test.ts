@@ -2,8 +2,9 @@ import { act, waitFor } from '@testing-library/react-native';
 
 import { renderHookWithProviders } from '@/test-utils/render';
 
-import { useWordList, WORD_LIST_PAGE_SIZE } from './use-word-list';
 import type { WordsRepository } from '../domain/words-repository';
+
+import { useWordList, WORD_LIST_PAGE_SIZE } from './use-word-list';
 
 function createRepository() {
   const listWords = jest.fn<
