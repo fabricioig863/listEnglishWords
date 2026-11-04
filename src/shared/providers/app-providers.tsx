@@ -6,6 +6,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { createQueryClient } from '@/shared/lib/query-client';
 import { theme } from '@/shared/theme/theme';
+import { SQLiteProvider } from 'expo-sqlite';
+import { WORDS_DATABASE } from '../database/words-database';
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(createQueryClient);
@@ -13,10 +15,15 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <StatusBar style="dark" />
-          {children}
-        </ThemeProvider>
+        <SQLiteProvider
+          databaseName={WORDS_DATABASE.name}
+          assetSource={{ assetId: WORDS_DATABASE.asset }}
+        >
+          <ThemeProvider theme={theme}>
+            <StatusBar style="dark" />
+            {children}
+          </ThemeProvider>
+        </SQLiteProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
   );
