@@ -1,4 +1,3 @@
-import { AppProviders } from '@/shared/providers/app-providers';
 import { NotoSans_400Regular, NotoSans_500Medium } from '@expo-google-fonts/noto-sans';
 import {
   PlusJakartaSans_400Regular,
@@ -11,6 +10,9 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+
+import { AppDependencies } from '@/di/app-dependencies';
+import { AppProviders } from '@/shared/providers/app-providers';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,7 +41,9 @@ export default function RootLayout() {
 
   return (
     <AppProviders>
-      <Stack screenOptions={{ headerShown: false }} />
+      <AppDependencies>
+        <Stack screenOptions={{ headerShown: false }} />
+      </AppDependencies>
     </AppProviders>
   );
 }

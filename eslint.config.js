@@ -7,6 +7,20 @@ module.exports = defineConfig([
   expoConfig,
   prettierRecommended,
   {
+    rules: {
+      'import/order': [
+        'error',
+        {
+          groups: [['builtin', 'external'], 'internal', ['parent', 'sibling', 'index']],
+          pathGroups: [{ pattern: '@/**', group: 'internal' }],
+          pathGroupsExcludedImportTypes: ['builtin'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc', caseInsensitive: true },
+        },
+      ],
+    },
+  },
+  {
     ignores: ['dist/*', 'ios/*', 'android/*', 'coverage/*'],
   },
 ]);
