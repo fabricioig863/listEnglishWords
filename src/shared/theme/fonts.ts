@@ -5,5 +5,6 @@ export const fonts = {
   bold: 'PlusJakartaSans_700Bold',
   extraBold: 'PlusJakartaSans_800ExtraBold',
   phonetic: 'NotoSans_400Regular',
+  italic: 'PlusJakartaSans_400Regular_Italic',
   phoneticMedium: 'NotoSans_500Medium',
 } as const;

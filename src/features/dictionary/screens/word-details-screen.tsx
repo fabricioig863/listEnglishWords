@@ -1,8 +1,10 @@
+import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { ArrowLeft, ExternalLink } from 'lucide-react-native';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, ScrollView } from 'react-native';
 
+import type { Theme } from '@/shared/theme/theme';
 import { Box } from '@/shared/ui/box';
 import { Card } from '@/shared/ui/card';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -11,6 +13,7 @@ import { StateMessage } from '@/shared/ui/state-message';
 import { Text } from '@/shared/ui/text';
 
 import { HighlightedWord } from '../components/highlighted-word';
+import { MeaningsSection } from '../components/meanings-section';
 import { PhoneticChips } from '../components/phonetic-chips';
 import { useWordDetails } from '../hooks/use-word-details';
 
@@ -22,6 +25,7 @@ type WordDetailsScreenProps = {
 
 export function WordDetailsScreen({ word }: WordDetailsScreenProps) {
   const router = useRouter();
+  const { spacing } = useTheme<Theme>();
   const { data, error, isError, isFetching, refetch } = useWordDetails(word);
 
   function openWiktionary() {
@@ -49,7 +53,7 @@ export function WordDetailsScreen({ word }: WordDetailsScreenProps) {
       );
     }
 
-    return null; // 2.4b: seção de significados
+    return data ? <MeaningsSection meanings={data.meanings} /> : null;
   }
 
   return (
@@ -70,14 +74,22 @@ export function WordDetailsScreen({ word }: WordDetailsScreenProps) {
           <Box width={44} />
         </Box>
 
-        <Box marginTop="l">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingTop: spacing.l,
+            paddingBottom: spacing.xl,
+            gap: spacing.xl,
+          }}
+        >
           <Card>
             <HighlightedWord word={data?.word ?? word} />
             {data ? <PhoneticChips phonetics={data.phonetics} /> : null}
           </Card>
-        </Box>
 
-        {renderBody()}
+          {renderBody()}
+        </ScrollView>
       </Box>
     </Screen>
   );

@@ -1,6 +1,7 @@
 import { NotoSans_400Regular, NotoSans_500Medium } from '@expo-google-fonts/noto-sans';
 import {
   PlusJakartaSans_400Regular,
+  PlusJakartaSans_400Regular_Italic,
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold,
@@ -25,6 +26,7 @@ export default function RootLayout() {
     PlusJakartaSans_800ExtraBold,
     NotoSans_400Regular,
     NotoSans_500Medium,
+    PlusJakartaSans_400Regular_Italic,
   });
 
   const isReady = fontsLoaded || fontError !== null;
