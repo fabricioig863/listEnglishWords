@@ -27,7 +27,7 @@ type ProviderOptions = {
 export function createTestQueryClient() {
   return new QueryClient({
     defaultOptions: {
-      queries: { retry: false, gcTime: Infinity },
+      queries: { retry: false, retryDelay: 0, gcTime: Infinity },
       mutations: { retry: false },
     },
   });

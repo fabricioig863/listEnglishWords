@@ -55,8 +55,7 @@ export function WordListScreen() {
         <StateMessage
           icon={TriangleAlert}
           title="Não foi possível carregar as palavras"
-          actionLabel="Tentar novamente"
-          onAction={() => refetch()}
+          primaryAction={{ label: 'Tentar novamente', onPress: () => refetch() }}
         />
       );
     }

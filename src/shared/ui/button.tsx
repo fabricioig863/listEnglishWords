@@ -1,28 +1,44 @@
+import type { LucideIcon } from 'lucide-react-native';
 import { Pressable } from 'react-native';
 
 import { Box } from './box';
+import { Icon } from './icon';
 import { Text } from './text';
 
-type ButtonProps = {
+const VARIANTS = {
+  primary: { bg: 'accent', pressedBg: 'accentPressed', border: 'accent', text: 'onAccent' },
+  secondary: { bg: 'surface', pressedBg: 'background', border: 'inputBorder', text: 'text' },
+} as const;
+
+export type ButtonProps = {
   label: string;
   onPress: () => void;
+  variant?: keyof typeof VARIANTS;
+  icon?: LucideIcon;
 };
 
-export function Button({ label, onPress }: ButtonProps) {
+export function Button({ label, onPress, variant = 'primary', icon }: ButtonProps) {
+  const colors = VARIANTS[variant];
+
   return (
     <Pressable onPress={onPress} accessibilityRole="button">
       {({ pressed }) => (
         <Box
           height={48}
-          paddingHorizontal="xl"
+          paddingHorizontal="l"
           borderRadius="m"
-          bg={pressed ? 'accentPressed' : 'accent'}
+          borderWidth={1}
+          borderColor={colors.border}
+          bg={pressed ? colors.pressedBg : colors.bg}
+          flexDirection="row"
           alignItems="center"
           justifyContent="center"
+          gap="s"
         >
-          <Text variant="bodyStrong" color="onAccent">
+          <Text variant="bodyStrong" color={colors.text}>
             {label}
           </Text>
+          {icon ? <Icon icon={icon} color={colors.text} size={18} /> : null}
         </Box>
       )}
     </Pressable>

@@ -68,7 +68,15 @@ export const theme = createTheme({
       lineHeight: 22,
       color: 'text',
     },
-    word: { fontFamily: fonts.extraBold, fontSize: 48, lineHeight: 52, color: 'text' },
+    word: {
+      fontFamily: fonts.extraBold,
+      fontSize: 48,
+      lineHeight: 52,
+      letterSpacing: -1.5,
+      color: 'text',
+    },
+    heading: { fontFamily: fonts.extraBold, fontSize: 20, lineHeight: 28, color: 'text' },
+    badge: { fontFamily: fonts.extraBold, fontSize: 11, lineHeight: 14, color: 'accentPressed' },
     title: {
       fontFamily: fonts.extraBold,
       fontSize: 28,
