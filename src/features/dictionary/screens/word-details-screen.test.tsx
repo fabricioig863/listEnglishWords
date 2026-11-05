@@ -1,5 +1,5 @@
 import { onlineManager } from '@tanstack/react-query';
-import { fireEvent, screen } from '@testing-library/react-native';
+import { cleanup, fireEvent, screen } from '@testing-library/react-native';
 import * as WebBrowser from 'expo-web-browser';
 
 import { renderWithProviders } from '@/test-utils/render';
@@ -26,7 +26,10 @@ function renderScreen(word: string, getWordDetails: jest.Mock) {
 }
 
 describe('WordDetailsScreen', () => {
-  afterEach(() => onlineManager.setOnline(true));
+  afterEach(async () => {
+    await cleanup();
+    onlineManager.setOnline(true);
+  });
 
   it('mostra o esqueleto enquanto os significados carregam', async () => {
     await renderScreen(
