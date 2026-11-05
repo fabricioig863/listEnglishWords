@@ -25,6 +25,18 @@ function renderScreen(word: string, getWordDetails: jest.Mock) {
   });
 }
 
+jest.mock('expo-speech', () => ({ speak: jest.fn(), stop: jest.fn() }));
+jest.mock('expo-audio', () => ({
+  setAudioModeAsync: jest.fn(),
+  useAudioPlayer: jest.fn(() => ({ play: jest.fn(), pause: jest.fn(), seekTo: jest.fn() })),
+  useAudioPlayerStatus: jest.fn(() => ({
+    playing: false,
+    currentTime: 0,
+    duration: 0,
+    didJustFinish: false,
+  })),
+}));
+
 describe('WordDetailsScreen', () => {
   afterEach(async () => {
     await cleanup();

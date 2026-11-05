@@ -16,6 +16,7 @@ import { Text } from '@/shared/ui/text';
 import { HighlightedWord } from '../components/highlighted-word';
 import { MeaningsSection } from '../components/meanings-section';
 import { PhoneticChips } from '../components/phonetic-chips';
+import { PronunciationPlayer } from '../components/pronunciation-player';
 import { MeaningsSkeleton, PhoneticChipsSkeleton } from '../components/word-details-skeleton';
 import { useWordDetails } from '../hooks/use-word-details';
 
@@ -104,6 +105,8 @@ export function WordDetailsScreen({ word, footer, headerAction }: WordDetailsScr
           <Card>
             <HighlightedWord word={data?.word ?? word} />
             {data ? <PhoneticChips phonetics={data.phonetics} /> : null}
+            {data ? <PronunciationPlayer word={data.word} audios={data.audios} /> : null}
+
             {isPending && !isPaused ? <PhoneticChipsSkeleton /> : null}
           </Card>
 
