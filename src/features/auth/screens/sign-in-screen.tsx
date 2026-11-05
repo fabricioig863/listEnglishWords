@@ -71,6 +71,7 @@ export function SignInScreen() {
               <FormTextField
                 control={control}
                 name="email"
+                testID="sign-in-email"
                 label="E-mail"
                 icon={Mail}
                 placeholder="voce@email.com"
@@ -83,6 +84,7 @@ export function SignInScreen() {
               />
               <FormTextField
                 control={control}
+                testID="sign-in-password"
                 name="password"
                 label="Senha"
                 icon={Lock}
@@ -101,6 +103,7 @@ export function SignInScreen() {
               ) : null}
 
               <Button
+                testID="sign-in-submit"
                 label={signIn.isPending ? 'Entrando…' : 'Entrar'}
                 size="large"
                 onPress={submit}

@@ -80,6 +80,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:e2e": "maestro test .maestro",
     "build:words-db": "node --disable-warning=ExperimentalWarning scripts/build-words-db.mjs"
   },
   "private": true,

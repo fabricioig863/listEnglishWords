@@ -61,6 +61,7 @@ export function SignUpScreen() {
               <FormTextField
                 control={control}
                 name="name"
+                testID="sign-up-name"
                 label="Nome"
                 icon={UserRound}
                 placeholder="Como podemos te chamar?"
@@ -73,6 +74,7 @@ export function SignUpScreen() {
                 control={control}
                 name="email"
                 label="E-mail"
+                testID="sign-up-email"
                 icon={Mail}
                 placeholder="voce@email.com"
                 keyboardType="email-address"
@@ -86,6 +88,7 @@ export function SignUpScreen() {
                 control={control}
                 name="password"
                 label="Senha"
+                testID="sign-up-password"
                 icon={Lock}
                 isPassword
                 hint={`Pelo menos ${MIN_PASSWORD_LENGTH} caracteres`}
@@ -98,6 +101,7 @@ export function SignUpScreen() {
                 control={control}
                 name="confirmPassword"
                 label="Confirmar senha"
+                testID="sign-up-confirm-password"
                 icon={Lock}
                 isPassword
                 autoComplete="new-password"
@@ -115,6 +119,7 @@ export function SignUpScreen() {
               ) : null}
 
               <Button
+                testID="sign-up-submit"
                 label={signUp.isPending ? 'Criando conta…' : 'Criar conta'}
                 size="large"
                 onPress={submit}

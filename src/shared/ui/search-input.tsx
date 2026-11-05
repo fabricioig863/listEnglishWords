@@ -24,6 +24,7 @@ export function SearchInput({ value, onChangeText, placeholder }: SearchInputPro
       </Box>
 
       <TextInput
+        testID="word-search-input"
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}

@@ -15,6 +15,7 @@ export function WordCell({ word, onPress }: WordCellProps) {
       accessibilityRole="button"
       accessibilityLabel={word}
       accessibilityHint="Abre os significados da palavra"
+      testID={`word-cell-${word}`}
     >
       {({ pressed }) => (
         <Box

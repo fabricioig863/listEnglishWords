@@ -1,0 +1,35 @@
+appId: com.fabricioig863.listenglishwords
+---
+- launchApp:
+    clearState: true
+- tapOn: 'Criar conta'
+- tapOn:
+    id: 'sign-up-name'
+- inputText: 'Maestro'
+- tapOn:
+    id: 'sign-up-email'
+- inputRandomEmail
+- tapOn:
+    id: 'sign-up-password'
+- tapOn:
+    text: 'Choose My Own Password|Escolher Minha Senha|Escolher Minha Própria Senha'
+    optional: true
+- inputText: 'secret123'
+- tapOn:
+    id: 'sign-up-confirm-password'
+- tapOn:
+    text: 'Choose My Own Password|Escolher Minha Senha|Escolher Minha Própria Senha'
+    optional: true
+- inputText: 'secret123'
+- pressKey: Enter
+- tapOn:
+    text: 'Not Now|Agora Não|Agora não'
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'word-search-input'
+    timeout: 15000
+- tapOn: 'Conta e sair'
+- tapOn: 'Sair'
+- assertVisible:
+    id: 'sign-in-submit'

@@ -20,6 +20,7 @@ export type ButtonProps = {
   icon?: LucideIcon;
   iconPosition?: 'left' | 'right';
   disabled?: boolean;
+  testID?: string;
 };
 
 export function Button({
@@ -30,12 +31,14 @@ export function Button({
   icon,
   iconPosition = 'right',
   disabled = false,
+  testID,
 }: ButtonProps) {
   const colors = VARIANTS[variant];
   const iconElement = icon ? <Icon icon={icon} color={colors.text} size={18} /> : null;
 
   return (
     <Pressable
+      testID={testID}
       onPress={onPress}
       disabled={disabled}
       accessibilityRole="button"

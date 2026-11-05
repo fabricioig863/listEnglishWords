@@ -1,0 +1,26 @@
+appId: com.fabricioig863.listenglishwords
+env:
+  EMAIL: ${E2E_EMAIL}
+  PASSWORD: ${E2E_PASSWORD}
+---
+- launchApp:
+    clearState: true
+- runFlow: subflows/sign-in.yaml
+- tapOn:
+    id: 'word-search-input'
+- inputText: 'hello'
+- tapOn:
+    id: 'word-cell-hello'
+- extendedWaitUntil:
+    visible: 'Significados'
+    timeout: 15000
+- tapOn: 'Adicionar aos favoritos'
+- assertVisible: 'Remover dos favoritos'
+- tapOn: 'Voltar para a lista'
+- tapOn: 'Favoritos'
+- assertVisible: 'hello'
+- tapOn: 'Histórico'
+- assertVisible: 'hello'
+- tapOn: 'Favoritos'
+- tapOn: 'Remover hello dos favoritos'
+- assertVisible: 'Nenhum favorito ainda'
