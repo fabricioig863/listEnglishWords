@@ -12,38 +12,49 @@ Aplicativo mobile para explorar palavras em inglês, com significados, fonética
 - [Testes](#testes)
 - [Arquitetura](#arquitetura)
 - [Base de palavras](#base-de-palavras)
+- [Dicionário, cache e offline](#dicionário-cache-e-offline)
+- [Autenticação e dados por usuário](#autenticação-e-dados-por-usuário)
 - [Decisões técnicas](#decisões-técnicas)
 - [Problemas encontrados](#problemas-encontrados)
-- [Limitações conhecidas](#limitações-conhecidas)
+- [Limitações e próximos passos](#limitações-e-próximos-passos)
 - [Design](#design)
 
 ## Status
 
-| Etapa | Entrega                                                                    | Situação |
-| ----- | -------------------------------------------------------------------------- | -------- |
-| 0     | Fundação: lint, testes, tema, providers                                    | ✅       |
-| 1     | Lista de palavras com rolagem infinita e busca                             | ✅       |
-| 2     | Detalhe da palavra (Free Dictionary API): significados, fonética e estados | ⏳       |
-| 3     | Cache persistido das requisições                                           | ⏳       |
-| 4     | Pronúncia em áudio                                                         | ⏳       |
-| 5     | Autenticação (Supabase)                                                    | ⏳       |
-| 6     | Favoritos e histórico por usuário                                          | ⏳       |
-| 7     | Testes E2E (Maestro)                                                       | ⏳       |
-| 8     | Polimento e documentação final                                             | ⏳       |
+**Requisitos obrigatórios**
+
+| Requisito                                      | Situação |
+| ---------------------------------------------- | -------- |
+| Lista de palavras com rolagem infinita         | ✅       |
+| Visualizar palavra, significados e fonética    | ✅       |
+| Salvar e remover favoritos                     | ✅       |
+| Histórico de palavras vistas                   | ✅       |
+| Cache das requisições                          | ✅       |
+| Wireframe (lista + detalhe com Voltar/Próximo) | ✅       |
+
+**Diferenciais**
+
+| Diferencial                   | Situação | Como                                                             |
+| ----------------------------- | -------- | ---------------------------------------------------------------- |
+| 1 — Áudio                     | ✅       | mp3 da API com fallback para voz sintetizada do aparelho         |
+| 2 — Injeção de dependência    | ✅       | Contexts tipados + composition root, sem biblioteca              |
+| 3 — Testes                    | ✅       | 142 testes (unitários, integração com SQLite real, hooks, telas) |
+| 4 — Login e dados por usuário | ✅       | Supabase Auth + Postgres com Row Level Security                  |
 
 ## Tecnologias
 
-| Área              | Escolha                                                   |
-| ----------------- | --------------------------------------------------------- |
-| Base              | React Native 0.88, Expo SDK 58, TypeScript 6, Expo Router |
-| UI                | Restyle, Lucide, Plus Jakarta Sans / Noto Sans            |
-| Listas            | FlashList v2                                              |
-| Dados locais      | expo-sqlite (banco pré-construído)                        |
-| Estado assíncrono | TanStack Query                                            |
-| Testes            | Jest (jest-expo), React Native Testing Library v14        |
-| Qualidade         | ESLint (com `import/order`), Prettier                     |
-
-_Lista completada a cada etapa._
+| Área              | Escolha                                                         |
+| ----------------- | --------------------------------------------------------------- |
+| Base              | React Native 0.88, Expo SDK 58, TypeScript 6, Expo Router       |
+| UI                | Restyle (tokens tipados), Lucide, Plus Jakarta Sans / Noto Sans |
+| Listas            | FlashList v2                                                    |
+| Dados locais      | expo-sqlite (banco pré-construído), expo-sqlite/kv-store        |
+| Estado assíncrono | TanStack Query (+ persister e onlineManager com NetInfo)        |
+| Formulários       | React Hook Form + zod                                           |
+| Backend           | Supabase (Auth + Postgres com RLS)                              |
+| Áudio             | expo-audio, expo-speech                                         |
+| Testes            | Jest (jest-expo), React Native Testing Library v14              |
+| Qualidade         | ESLint (com `import/order`), Prettier                           |
 
 ## Como executar
 
@@ -51,48 +62,55 @@ _Lista completada a cada etapa._
 
 - Node 22+
 - Xcode (iOS) e/ou Android Studio com emulador (Android)
+- Um projeto [Supabase](https://supabase.com) (plano gratuito é suficiente)
 
-### Passos
+### 1. Supabase
+
+1. Crie um projeto no Supabase.
+2. **SQL Editor** → execute o conteúdo de [`supabase/migrations/20261105120000_create_favorites_and_history.sql`](supabase/migrations/20261105120000_create_favorites_and_history.sql) (tabelas, índices e políticas RLS).
+3. **Authentication → Sign In / Providers**: provider **Email** habilitado, **Allow new users to sign up** ligado e **Confirm email** desligado (permite entrar logo após o cadastro).
+4. **Project Settings → API Keys / Data API**: copie a **Project URL** e a **Publishable key**.
+
+### 2. Variáveis de ambiente
+
+```bash
+cp .env.example .env
+```
+
+Preencha `EXPO_PUBLIC_SUPABASE_URL` e `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. O app valida as variáveis na inicialização (zod) e **recusa chaves que não sejam publishable** — a `secret key` nunca deve ir para o app.
+
+### 3. Rodar
 
 ```bash
 npm install
 npx expo run:ios      # ou: npx expo run:android
 ```
 
-O projeto usa **Continuous Native Generation**: as pastas `ios/` e `android/` não são versionadas e são geradas automaticamente a partir do `app.json` no primeiro `run`. Não é compatível com Expo Go — é um development build.
-
-_Variáveis de ambiente do Supabase: Etapa 5._
+O projeto usa **Continuous Native Generation**: `ios/` e `android/` não são versionadas e são geradas a partir do `app.json` no primeiro `run`. É um development build (não usa Expo Go).
 
 ### Scripts
 
-| Comando                  | O que faz                                                           |
-| ------------------------ | ------------------------------------------------------------------- |
-| `npm start`              | Servidor de desenvolvimento (Metro); também gera os tipos das rotas |
-| `npm run build:words-db` | Regenera `assets/db/words.db` a partir da lista original            |
-| `npm run format`         | Formata o projeto com Prettier                                      |
+| Comando                  | O que faz                                                |
+| ------------------------ | -------------------------------------------------------- |
+| `npm start`              | Metro; também gera os tipos das rotas (`typedRoutes`)    |
+| `npm test`               | Testes                                                   |
+| `npm run typecheck`      | Checagem de tipos                                        |
+| `npm run lint`           | ESLint + Prettier                                        |
+| `npm run build:words-db` | Regenera `assets/db/words.db` a partir da lista original |
 
 ## Testes
 
-| Comando                 | O que faz                         |
-| ----------------------- | --------------------------------- |
-| `npm test`              | Testes unitários e de componentes |
-| `npm run test:coverage` | Cobertura                         |
-| `npm run lint`          | ESLint + Prettier                 |
-| `npm run typecheck`     | Checagem de tipos                 |
+**142 testes**, organizados por camada:
 
-### Estratégia
+| Camada               | Como é testada                                                                                         |
+| -------------------- | ------------------------------------------------------------------------------------------------------ |
+| Regras puras         | Tabelas de casos (`it.each`): busca por prefixo, mapper da API, política de retry, agrupamento por dia |
+| Repositório SQLite   | **SQL real** em banco em memória (`node:sqlite`) — valida a consulta, não a string                     |
+| Repositórios remotos | `fetch` e cliente Supabase injetados: classificação de erros, timeout, cancelamento                    |
+| Hooks                | `renderHook` com repositórios fake via DI (paginação, atualização otimista com rollback)               |
+| Telas                | RNTL buscando por papel de acessibilidade (`findByRole('button', { name })`)                           |
 
-| Camada                 | Como é testada                                                                               |
-| ---------------------- | -------------------------------------------------------------------------------------------- |
-| Regras puras (domínio) | Testes unitários com tabelas de casos (`it.each`), ex.: limites da busca por prefixo         |
-| Repositório SQLite     | **SQL real** executado em banco em memória (`node:sqlite`) — valida a consulta, não a string |
-| Hooks                  | `renderHook` com repositório fake injetado via DI                                            |
-| Telas                  | RNTL buscando elementos por papel de acessibilidade (`findByRole('button', { name })`)       |
-| Fluxos completos       | _Maestro — Etapa 7_                                                                          |
-
-As rotas (`src/app/`) ficam fora da cobertura: são apenas composição; a lógica vive nas features.
-
-_E2E com Maestro: Etapa 7._
+As rotas (`src/app/`) ficam fora da cobertura: são composição; a lógica vive nas features.
 
 ## Arquitetura
 
@@ -100,125 +118,131 @@ Organização por **funcionalidade**, com camadas leves dentro de cada uma:
 
 ```
 src/
-  app/            rotas do Expo Router (somente composição de telas)
+  app/            rotas (Expo Router) — compõem features, sem regra de negócio
   features/
-    words/
-      domain/     contratos e regras puras (sem React, sem SQLite)
-      data/       implementações (repositório SQLite)
-      hooks/      estado assíncrono com TanStack Query
-      components/ componentes da feature
-      screens/    telas que orquestram hooks, navegação e estados
-      di.ts       dependências que a feature declara
-  di/             composition root: liga contratos às implementações
-  shared/         tema, componentes de UI, hooks genéricos, providers
+    words/        lista local (SQLite), busca, próximo
+    dictionary/   definições (Free Dictionary API), detalhe, pronúncia
+    auth/         login, cadastro, sessão
+    library/      favoritos e histórico (Supabase)
+      domain/     contratos e regras puras (sem React, sem SDKs)
+      data/       implementações (SQLite, HTTP, Supabase)
+      hooks/      estado assíncrono (TanStack Query)
+      components/ e screens/
+  di/             composition root
+  shared/         tema, UI, providers, utilitários
   test-utils/     render com providers e dependências fake
 ```
 
-**Regras de dependência**
-
-- Uma feature não importa outra feature — apenas `shared/`.
-- `shared/` não conhece nenhuma feature.
-- Só `src/di/` (no app) e `src/test-utils/` (nos testes) conhecem as implementações concretas.
+**Regras de dependência:** uma feature não importa outra; `shared/` não conhece features. Quando duas features precisam conversar (ex.: o detalhe da palavra mostra o botão de favorito e o "Próximo" da lista), **a rota compõe** usando _slots_ (`headerAction`, `footer`) — a tela do dicionário não sabe que favoritos existem.
 
 ### Injeção de dependência
 
-Sem biblioteca: cada feature declara do que precisa com `createInjectionContext<T>()` (um Context tipado que falha imediatamente se o provider estiver ausente), e o composition root em `src/di/` fornece as implementações reais.
+Cada feature declara o que precisa com `createInjectionContext<T>()` — um Context tipado que **falha imediatamente** se o provider estiver ausente. O composition root (`src/di/`) fornece as implementações reais; `test-utils` fornece fakes.
 
 ```
-Tela → useWordList → useWordsRepository() → WordsRepository (contrato)
-                                                    ↑
-                         src/di: createSqliteWordsRepository(db)   ← app
-                         test-utils: jest.fn() / fake                ← testes
+Tela → hook → useXRepository() → contrato (domain)
+                                     ↑
+               src/di: implementação real (SQLite / HTTP / Supabase)
+               test-utils: jest.fn / fake
 ```
 
-Bibliotecas como InversifyJS ou tsyringe foram descartadas: dependem de decorators e `reflect-metadata`, que geram atrito com Babel/Hermes, para um ganho que o Context já entrega.
+InversifyJS/tsyringe foram descartados: dependem de decorators e `reflect-metadata` (atrito com Babel/Hermes) para um ganho que o Context já entrega.
 
 ## Base de palavras
 
-A Free Dictionary API não tem endpoint de listagem; a lista vem de [`dwyl/english-words`](https://github.com/dwyl/english-words) (`words_dictionary.json`, ~370 mil palavras).
+A Free Dictionary API não lista palavras; a lista vem de [`dwyl/english-words`](https://github.com/dwyl/english-words) (~370 mil).
 
-### Por que SQLite pré-construído
+| Opção                        | Problema                                                                |
+| ---------------------------- | ----------------------------------------------------------------------- |
+| `import` do JSON no bundle   | Parse de vários MB na thread JS no startup; dezenas de MB fixos no heap |
+| JSON carregado em runtime    | Mesmo custo de memória; busca vira `filter` linear a cada tecla         |
+| Tabela remota                | Dado estático dependendo de rede a cada página                          |
+| **SQLite pré-construído** ✅ | Dados em disco, consultas por índice, offline, abertura instantânea     |
 
-| Opção                        | Problema                                                                     |
-| ---------------------------- | ---------------------------------------------------------------------------- |
-| `import` do JSON no bundle   | Parse de vários MB na thread JS no startup; dezenas de MB fixos no heap      |
-| JSON carregado em runtime    | Mesmo custo de memória; busca vira `filter` linear a cada tecla              |
-| AsyncStorage                 | Chave-valor: sem consulta, ordenação ou índice                               |
-| Tabela remota (Supabase)     | Dado estático e público dependendo de rede a cada página                     |
-| **SQLite pré-construído** ✅ | Dados em disco, consultas por índice O(log n), offline, abertura instantânea |
+O script [`scripts/build-words-db.mjs`](scripts/build-words-db.mjs) gera `assets/db/words.db` com o SQLite embutido no Node, sem dependências.
 
-O script [`scripts/build-words-db.mjs`](scripts/build-words-db.mjs) baixa a lista, filtra entradas inválidas e gera `assets/db/words.db` usando o SQLite embutido no Node (`node:sqlite`) — sem dependências extras.
+- **Tabela `WITHOUT ROWID`** com `word` como chave primária: a tabela é o próprio índice.
+- **Paginação por cursor** (`word > :cursor`), custo constante em qualquer profundidade (ao contrário de `OFFSET`).
+- **Busca por prefixo como intervalo** (`word >= 'hel' AND word < 'hem'`), que usa o índice — `LIKE` normalmente não.
+- **`LIMIT n + 1`** indica se há próxima página sem `COUNT`.
+- **Nome versionado** (`words-v1.db`) força a cópia de uma base atualizada.
 
-### Técnicas
+| Medição                             | Valor                                      |
+| ----------------------------------- | ------------------------------------------ |
+| Palavras                            | 370.098 (3 entradas inválidas descartadas) |
+| Tamanho                             | 5,1 MB                                     |
+| `COUNT(*)` + página (iOS / Android) | ~13 ms / ~19 ms                            |
+| `EXPLAIN QUERY PLAN` da paginação   | `SEARCH words USING PRIMARY KEY (word>?)`  |
 
-- **Tabela `WITHOUT ROWID` com `word` como chave primária**: a tabela é o próprio índice ordenado; sem duplicar os dados num índice separado.
-- **Paginação por cursor (keyset)**: `WHERE word > :cursor ORDER BY word LIMIT n` — custo constante em qualquer profundidade, ao contrário de `OFFSET`.
-- **Busca por prefixo como intervalo**: `word >= 'hel' AND word < 'hem'` usa o índice; `LIKE 'hel%'` normalmente não. Casos de borda (`'az' → 'b'`, `'zz'` sem limite superior) cobertos por testes.
-- **`LIMIT n + 1`**: uma linha extra indica se há próxima página, sem `COUNT`.
-- **Nome versionado (`words-v1.db`)**: o asset só é copiado se o arquivo não existir no aparelho; mudar a versão força a cópia de uma base atualizada.
+## Dicionário, cache e offline
 
-### Medições
+- **Validação na fronteira:** a resposta da API passa por zod e por um mapper puro (agrupa classes gramaticais repetidas entre entradas, deduplica fonética, identifica sotaque pelo nome do mp3).
+- **Erros de domínio** (`not-found`, `server`, `network`, `timeout`, `invalid-response`): a tela nunca inspeciona status HTTP; um `switch` exaustivo escolhe a mensagem.
+- **Retry só para falhas transitórias** (`server`, `network`), no máximo 2; timeout de 10 s não é repetido.
+- **Cache persistido** (Obrigatório 2): `PersistQueryClientProvider` sobre `expo-sqlite/kv-store`. A persistência é **opt-in** via `meta: { persist: true }` — só definições são gravadas; a lista de palavras já está no SQLite.
+- **Offline:** `onlineManager` ligado ao NetInfo (conectado **e** internet alcançável). Sem rede, a consulta pausa, a tela mostra "Você está offline" e **retoma sozinha** quando a conexão volta. Palavras já vistas abrem offline.
+- **Pronúncia:** mp3 da API (prioridade US → UK → AU); se não houver áudio ou o arquivo não carregar em 6 s, usa a **voz sintetizada** do aparelho.
 
-| Métrica                                       | Valor                                      |
-| --------------------------------------------- | ------------------------------------------ |
-| Palavras                                      | 370.098 (3 entradas inválidas descartadas) |
-| Tamanho do banco                              | 5,1 MB                                     |
-| `COUNT(*)` + página keyset (simulador iOS)    | ~13 ms                                     |
-| `COUNT(*)` + página keyset (emulador Android) | ~19 ms                                     |
+## Autenticação e dados por usuário
 
-```
-EXPLAIN QUERY PLAN SELECT word FROM words WHERE word > 'helmet' LIMIT 50;
-`--SEARCH words USING PRIMARY KEY (word>?)
-```
-
-`SEARCH` (e não `SCAN`) confirma o uso do índice.
-
-### Lista na tela
-
-- **TanStack Query também para dados locais**: paginação (`useInfiniteQuery`), estados de carregamento/erro uniformes e cache entre telas — voltar do detalhe mantém a lista e a busca.
-- **`staleTime: Infinity`**: a base é estática; nunca há refetch desnecessário.
-- **`keepPreviousData`**: ao trocar a busca, o resultado anterior permanece até o novo chegar — sem o grid piscar para um spinner a cada termo.
-- **Debounce de 300 ms** na busca; termo normalizado (trim + minúsculas) numa função única do domínio.
-- **FlashList**: recicla células em vez de recriá-las; páginas de 60 palavras (múltiplo das 3 colunas).
+- **Supabase Auth** (e-mail e senha). Senhas ficam em `auth.users` como **hash bcrypt**, gerenciadas pelo Supabase; o app nunca armazena senha.
+- **Sessão persistida** no aparelho e renovada automaticamente (pausada em segundo plano via `AppState`).
+- **Rotas protegidas** com `Stack.Protected` + `redirectTo`. **Nenhuma tela navega após login/logout**: a navegação é consequência do estado da sessão. A splash só some quando a sessão é resolvida (sem "piscar" o login).
+- **Logout com `scope: 'local'`**: sai deste aparelho e funciona offline.
+- **Banco** ([migration](supabase/migrations/20261105120000_create_favorites_and_history.sql)): `favorites` e `history` com chave `(user_id, word)`, snapshot da palavra para listar sem consultar a API, `check` na palavra e **RLS por operação** (`(select auth.uid()) = user_id`, `to authenticated`). Advisors de segurança do Supabase sem alertas.
+- **Cache por usuário:** as chaves incluem o id (`['library', 'favorites', userId]`), então trocar de conta nunca exibe dados da anterior.
+- **Favoritar é otimista** com rollback se o servidor falhar.
 
 ## Decisões técnicas
 
-| Decisão                                                      | Motivo                                                                                                             | Alternativa descartada                    |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
-| Apenas mobile (sem web)                                      | Escopo da vaga; SQLite e áudio exigiriam tratamento específico na web                                              | Manter `react-native-web`                 |
-| Continuous Native Generation                                 | `app.json` como fonte única da config nativa; diffs limpos                                                         | Versionar `ios/` e `android/`             |
-| Sem Zustand                                                  | Não há estado global de cliente: dados remotos ficam no TanStack Query e a lista no SQLite                         | Zustand para favoritos                    |
-| Restyle com tokens semânticos                                | Tema tipado; componentes nunca usam hex diretamente                                                                | StyleSheet + constantes                   |
-| Fontes via `useFonts`, uma família por peso                  | `fontWeight` não seleciona arquivo de fonte customizada no Android; nomes consistentes entre plataformas           | Embutir via config plugin                 |
-| `QueryClient` criado por factory                             | Testes isolados, sem cache compartilhado                                                                           | Instância singleton                       |
-| DI com Context tipado, um por dependência                    | Cada feature declara só o que usa; erro imediato e claro se faltar provider                                        | InversifyJS/tsyringe; objeto único global |
-| Repositório depende de `Pick<SQLiteDatabase, 'getAllAsync'>` | Permite testar com SQLite real no Node                                                                             | Depender do tipo completo do expo-sqlite  |
-| Abas headless (`expo-router/ui`)                             | Design pede seletor segmentado no topo; navegação do router, visual próprio, sem biblioteca extra                  | Tab bar inferior padrão                   |
-| Busca abaixo das abas, dentro da tela Palavras               | Abas não mudam de posição entre telas; busca pertence à feature que a usa (o enunciado permite reposicionar itens) | Busca entre header e abas, como no design |
-| Título da busca mostra o termo normalizado                   | Exibe o que o app realmente buscou (a busca ignora maiúsculas)                                                     | Exibir o texto digitado                   |
-| `@types/node` e `jest` declarados em `types`                 | TS 6 não carrega `@types/*` automaticamente; globals visíveis no projeto todo é custo aceito                       | `tsconfig` separado para testes           |
-| Ordem de imports imposta pelo ESLint                         | Padrão automático (externos → `@/` → relativos), corrigido ao salvar                                               | Convenção manual                          |
+| Decisão                                   | Motivo                                                                                        | Alternativa descartada                     |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Apenas mobile                             | Escopo da vaga; SQLite e áudio exigiriam tratamento específico na web                         | `react-native-web`                         |
+| Continuous Native Generation              | `app.json` como fonte única da config nativa                                                  | Versionar `ios/` e `android/`              |
+| Sem Zustand                               | Não há estado global de cliente: remoto no TanStack Query, lista no SQLite, sessão em Context | Zustand                                    |
+| Restyle com tokens semânticos             | Tema tipado; nenhum hex nas telas                                                             | StyleSheet + constantes                    |
+| Uma família de fonte por peso (e itálico) | No Android, `fontWeight`/`fontStyle` não selecionam arquivo de fonte customizada              | Embutir via plugin                         |
+| TanStack Query também para dados locais   | Paginação, estados uniformes e cache entre telas                                              | `useState` manual                          |
+| Abas headless (`expo-router/ui`) no topo  | Design pede seletor segmentado; sem biblioteca extra                                          | Tab bar inferior                           |
+| Busca abaixo das abas                     | Abas não mudam de posição entre telas (o enunciado permite reposicionar)                      | Busca entre header e abas                  |
+| React Hook Form + zod                     | Validação tipada de ponta a ponta e estado de formulário pronto                               | `useState` + validação manual              |
+| Persistência do cache opt-in por `meta`   | `shared` não conhece features; nenhuma feature é persistida por acidente                      | Excluir chaves por nome                    |
+| Feature `library` única                   | Favoritos e histórico compartilham snapshot, repositório e padrão de chaves                   | Duas features duplicadas                   |
+| Voz sintetizada como fallback de áudio    | Nativa, offline, sem chave de API                                                             | ResponsiveVoice                            |
+| Sessão no `kv-store`                      | Simples e suficiente para o desafio (área privada do app)                                     | SecureStore (limite de tamanho no Android) |
+| Tradução das definições                   | Não pedida; exigiria API externa, custo e latência; o app é "inglês → significados"           | Traduzir para português                    |
 
 ## Problemas encontrados
 
-| Problema                                              | Causa                                                                                                         | Solução                                                                               |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `render function has not been called`                 | RNTL v14: `render`, `renderHook` e `fireEvent` passaram a ser assíncronos                                     | `await` em todas as chamadas                                                          |
-| `Cannot find name 'describe'` / `'node:sqlite'`       | TypeScript 6 assume `"types": []` por padrão                                                                  | `"types": ["jest", "node"]` e `@types/node` explícito                                 |
-| Hook não re-renderizava após `fetchNextPage` no teste | _Tracked queries_ do TanStack Query: só re-renderiza por propriedades lidas antes; o teste lia só `isSuccess` | Aguardar com `waitFor` exatamente a propriedade que muda (`data`)                     |
-| `Must use import to load ES Module` no Jest           | `lucide-react-native` resolvido para `.mjs`; FlashList distribuída só como ESM                                | `moduleNameMapper` para o build CJS do Lucide; FlashList em `transformIgnorePatterns` |
-| `Type '"/word/[word]"' is not assignable`             | Tipos das rotas (`typedRoutes`) só são gerados com o Metro rodando                                            | Manter `npm start` ativo ao criar rotas                                               |
-| `Element type is invalid … WrappedScreenComponent`    | Arquivo de rota vazio, sem `export default` (o typecheck não detecta)                                         | Restaurar o export; diante desse erro, verificar primeiro os arquivos de rota         |
-| `Ref<View>` incompatível no `Pressable`               | No RN 0.88 `View` é componente de função; `Ref<View>` referencia a função, não a instância                    | `Ref<ComponentRef<typeof View>>`                                                      |
-| Avisos `not wrapped in act(...)` e falha na busca     | Asserção síncrona viu o estado intermediário do `keepPreviousData`; a consulta terminou após o teste          | `waitFor` no estado final — o aviso indicava teste terminando antes do app            |
-| `INSTALL_FAILED_INSUFFICIENT_STORAGE` no Android      | Partição de dados do emulador pequena para o APK de debug (~80 MB)                                            | Aumentar _Internal Storage_ do AVD e aplicar com _Wipe Data_                          |
+| Problema                                           | Causa                                                                                      | Solução                                                           |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| `render function has not been called`              | RNTL v14: `render`, `renderHook` e `fireEvent` são assíncronos                             | `await` em todas as chamadas                                      |
+| `Cannot find name 'describe'` / `'node:sqlite'`    | TypeScript 6 assume `"types": []`                                                          | `"types": ["jest", "node"]`                                       |
+| Hook não re-renderizava após `fetchNextPage`       | _Tracked queries_: só re-renderiza por propriedades lidas antes                            | `waitFor` na propriedade que muda                                 |
+| `Must use import to load ES Module`                | Lucide resolvido para `.mjs`; FlashList só ESM                                             | `moduleNameMapper` / `transformIgnorePatterns`                    |
+| Rota "não existe" no TypeScript                    | `typedRoutes` só regenera com o Metro rodando                                              | Manter `npm start` ao criar rotas                                 |
+| `Element type is invalid … WrappedScreenComponent` | Arquivo de rota vazio, sem `export default`                                                | Restaurar o export                                                |
+| "helluo" sempre retorna 502 em HTML                | Instabilidade do servidor da API (Cloudflare)                                              | Erro `server` honesto com retry e link para o Wiktionary          |
+| Skeleton por ~33 s offline                         | `fetch` pendurado até o timeout, repetido 3 vezes                                          | NetInfo + estado pausado; timeout não é repetido                  |
+| Avisos `act(...)` em testes                        | Asserções cedo demais / consulta pausada retomando após o teste                            | `waitFor` no estado final; `cleanup()` antes de `setOnline(true)` |
+| `Invalid API key`                                  | Chave copiada incompleta (39 de 46 caracteres)                                             | Copiar pelo botão do painel                                       |
+| Cadastro falhava com mensagem genérica             | `email_provider_disabled`: cadastros desligados no painel (diagnosticado nos logs via MCP) | Reativar "Allow new users to sign up"                             |
+| "Unmatched Route" deslogado                        | `Stack.Protected` sem destino de redirecionamento                                          | `redirectTo` explícito nos dois grupos                            |
+| Áudio preso em "Carregando…"                       | Servidor de mídia da API retornando 502                                                    | Fallback automático para voz sintetizada após 6 s                 |
+| `INSTALL_FAILED_INSUFFICIENT_STORAGE` (Android)    | Partição do emulador pequena para o APK de debug                                           | Aumentar o armazenamento do AVD + Wipe Data                       |
 
-## Limitações conhecidas
+## Limitações e próximos passos
 
-- **Recuperação de senha** fora do escopo: exige deep link e tela de redefinição; custo alto para o valor no contexto do desafio.
-- **Dark mode** não implementado: o design só define a paleta clara. O tema já separa paleta e tokens semânticos para receber uma segunda paleta.
-- **Primeira abertura** copia o banco de 5,1 MB do bundle para o armazenamento do app (operação única, imperceptível nos testes realizados).
+Escopo deixado de fora conscientemente, priorizando os requisitos e a qualidade do que foi entregue:
+
+- **Testes E2E (Maestro):** os fluxos críticos (login, favoritar, histórico) estão cobertos por testes de componente; o E2E seria o próximo passo.
+- **Recuperação de senha:** exige deep link e tela de redefinição.
+- **Dark mode:** o design só define a paleta clara; o tema já separa paleta e tokens semânticos.
+- **Marcadores "vista/favorita" no grid, deslizar para excluir e animações** (ex.: pulso no skeleton).
+- **Sessão criptografada** (SecureStore + chave para dados grandes).
+- **Projeto Supabase gratuito pausa após 7 dias sem uso:** se o login falhar, reative o projeto no painel ou crie o seu com a migration acima.
+- **Jest:** aviso intermitente "worker process failed to exit gracefully" (não afeta resultados) a investigar.
 
 ## Design
 
-As telas de referência estão em [`docs/design/`](docs/design/) (abra `index.html` no navegador). O enunciado original do desafio está em [`docs/challenge/challenge.md`](docs/challenge/challenge.md).
+Telas de referência em [`docs/design/`](docs/design/) (abra `index.html` no navegador). Enunciado original em [`docs/challenge/challenge.md`](docs/challenge/challenge.md).
