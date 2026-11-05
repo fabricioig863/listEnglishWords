@@ -13,14 +13,20 @@ import { AuthRepositoryProvider } from '@/features/auth/di';
 import type { AuthRepository } from '@/features/auth/domain/auth-repository';
 import { DictionaryRepositoryProvider } from '@/features/dictionary/di';
 import type { DictionaryRepository } from '@/features/dictionary/domain/dictionary-repository';
+import { LibraryRepositoryProvider } from '@/features/library/di';
+import type { LibraryRepository } from '@/features/library/domain/library';
 import { WordsRepositoryProvider } from '@/features/words/di';
 import type { WordsRepository } from '@/features/words/domain/words-repository';
+import { CurrentUserProvider } from '@/shared/di/current-user';
 import { theme } from '@/shared/theme/theme';
+
+export const TEST_USER_ID = 'user-1';
 
 export type TestDependencies = {
   wordsRepository?: WordsRepository;
   dictionaryRepository?: DictionaryRepository;
   authRepository?: AuthRepository;
+  libraryRepository?: LibraryRepository;
 };
 
 type ProviderOptions = {
@@ -32,6 +38,8 @@ const TEST_SAFE_AREA: Metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
   insets: { top: 47, right: 0, bottom: 34, left: 0 },
 };
+
+const TEST_CURRENT_USER = { userId: TEST_USER_ID };
 
 export function createTestQueryClient() {
   return new QueryClient({
@@ -73,9 +81,19 @@ function createWrapper({
       );
     }
 
+    if (dependencies.libraryRepository) {
+      content = (
+        <LibraryRepositoryProvider value={dependencies.libraryRepository}>
+          {content}
+        </LibraryRepositoryProvider>
+      );
+    }
+
     return (
       <SafeAreaProvider initialMetrics={TEST_SAFE_AREA}>
-        <QueryClientProvider client={queryClient}>{content}</QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+          <CurrentUserProvider value={TEST_CURRENT_USER}>{content}</CurrentUserProvider>
+        </QueryClientProvider>
       </SafeAreaProvider>
     );
   };

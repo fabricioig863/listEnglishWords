@@ -8,6 +8,7 @@ type IconProps = {
   color?: keyof Theme['colors'];
   size?: number;
   strokeWidth?: number;
+  filled?: boolean;
 };
 
 export function Icon({
@@ -15,8 +16,16 @@ export function Icon({
   color = 'text',
   size = 20,
   strokeWidth = 2,
+  filled = false,
 }: IconProps) {
   const { colors } = useTheme<Theme>();
 
-  return <IconComponent color={colors[color]} size={size} strokeWidth={strokeWidth} />;
+  return (
+    <IconComponent
+      color={colors[color]}
+      fill={filled ? colors[color] : 'none'}
+      size={size}
+      strokeWidth={strokeWidth}
+    />
+  );
 }

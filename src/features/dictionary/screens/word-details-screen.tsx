@@ -24,9 +24,10 @@ import { getErrorContent } from './get-error-content';
 type WordDetailsScreenProps = {
   word: string;
   footer?: ReactNode;
+  headerAction?: ReactNode;
 };
 
-export function WordDetailsScreen({ word, footer }: WordDetailsScreenProps) {
+export function WordDetailsScreen({ word, footer, headerAction }: WordDetailsScreenProps) {
   const router = useRouter();
   const { spacing } = useTheme<Theme>();
   const { data, error, isPending, isPaused, isError, isFetching, refetch } = useWordDetails(word);
@@ -88,7 +89,7 @@ export function WordDetailsScreen({ word, footer }: WordDetailsScreenProps) {
               <Text variant="overline">Buscando significados…</Text>
             </Box>
           ) : null}
-          <Box width={44} />
+          {headerAction ?? <Box width={44} />}
         </Box>
 
         <ScrollView
