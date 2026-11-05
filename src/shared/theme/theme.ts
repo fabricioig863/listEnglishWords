@@ -72,6 +72,7 @@ export const theme = createTheme({
       lineHeight: 22,
       color: 'text',
     },
+    helper: { fontFamily: fonts.semiBold, fontSize: 13, lineHeight: 18, color: 'textSecondary' },
     example: { fontFamily: fonts.italic, fontSize: 14, lineHeight: 20, color: 'textSecondary' },
     counter: { fontFamily: fonts.extraBold, fontSize: 12, lineHeight: 16, color: 'accentPressed' },
 
