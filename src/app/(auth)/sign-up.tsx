@@ -1,5 +1,1 @@
-import { Text } from '@/shared/ui/text';
-
-export default function SignUpRoute() {
-  return <Text>Cadastro em breve</Text>;
-}
+export { SignUpScreen as default } from '@/features/auth/screens/sign-up-screen';
