@@ -10,17 +10,17 @@ describe('mapAuthError', () => {
     ['email_address_invalid', 'invalid-email'],
     ['weak_password', 'weak-password'],
     ['some_new_code', 'unknown'],
-  ])('código "%s" → "%s"', (code, kind) => {
+  ])('code "%s" → "%s"', (code, kind) => {
     expect(mapAuthError({ code, message: 'x' })).toMatchObject({ kind });
   });
 
-  it('reconhece falha de rede', () => {
+  it('recognizes network failures', () => {
     expect(mapAuthError(new AuthRetryableFetchError('Failed to fetch', 0))).toMatchObject({
       kind: 'network',
     });
   });
 
-  it('trata valores sem código como desconhecidos', () => {
+  it('treats values without a code as unknown', () => {
     expect(mapAuthError(new Error('boom'))).toMatchObject({ kind: 'unknown' });
   });
 });

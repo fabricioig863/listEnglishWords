@@ -20,7 +20,7 @@ function renderScreen(listWords: jest.Mock) {
 describe('WordListScreen', () => {
   beforeEach(() => mockPush.mockClear());
 
-  it('exibe as palavras da primeira página', async () => {
+  it('renders the words from the first page', async () => {
     await renderScreen(
       jest.fn().mockResolvedValue({ words: ['apple', 'azure'], nextCursor: null }),
     );
@@ -29,7 +29,7 @@ describe('WordListScreen', () => {
     expect(screen.getByText('azure')).toBeOnTheScreen();
   });
 
-  it('navega para o detalhe ao tocar numa palavra', async () => {
+  it('navigates to the detail screen when a word is pressed', async () => {
     await renderScreen(jest.fn().mockResolvedValue({ words: ['apple'], nextCursor: null }));
 
     await fireEvent.press(await screen.findByRole('button', { name: 'apple' }));
@@ -37,7 +37,7 @@ describe('WordListScreen', () => {
     expect(mockPush).toHaveBeenCalledWith({ pathname: '/word/[word]', params: { word: 'apple' } });
   });
 
-  it('permite tentar novamente após um erro', async () => {
+  it('allows retrying after an error', async () => {
     const listWords = jest
       .fn()
       .mockRejectedValueOnce(new Error('disk I/O error'))
@@ -49,13 +49,13 @@ describe('WordListScreen', () => {
     expect(await screen.findByText('apple')).toBeOnTheScreen();
   });
 
-  it('informa quando não há palavras', async () => {
+  it('shows a message when there are no words', async () => {
     await renderScreen(jest.fn().mockResolvedValue({ words: [], nextCursor: null }));
 
     expect(await screen.findByText('Nenhuma palavra encontrada')).toBeOnTheScreen();
   });
 
-  it('filtra a lista pelo termo digitado', async () => {
+  it('filters the list by the typed term', async () => {
     const listWords = jest
       .fn()
       .mockResolvedValueOnce({ words: ['apple', 'hello'], nextCursor: null })

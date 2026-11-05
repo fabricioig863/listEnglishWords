@@ -22,7 +22,7 @@ async function fillAndSubmit(email: string, password: string) {
 }
 
 describe('SignInScreen', () => {
-  it('valida os campos sem chamar o servidor', async () => {
+  it('validates fields without calling the server', async () => {
     const signIn = jest.fn();
     await renderScreen(signIn);
 
@@ -33,7 +33,7 @@ describe('SignInScreen', () => {
     expect(signIn).not.toHaveBeenCalled();
   });
 
-  it('envia o e-mail aparado e a senha', async () => {
+  it('submits the trimmed email and the password', async () => {
     const signIn = jest.fn().mockResolvedValue({ id: '1', email: 'ana@email.com', name: 'Ana' });
     await renderScreen(signIn);
 
@@ -44,7 +44,7 @@ describe('SignInScreen', () => {
     );
   });
 
-  it('mostra a mensagem do servidor quando as credenciais estão erradas', async () => {
+  it('shows the server message when credentials are wrong', async () => {
     const signIn = jest.fn().mockRejectedValue(new AuthError('invalid-credentials'));
     await renderScreen(signIn);
 

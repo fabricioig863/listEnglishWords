@@ -27,7 +27,7 @@ const VALID_BODY = [
 ];
 
 describe('HttpDictionaryRepository', () => {
-  it('busca a palavra e devolve o modelo mapeado', async () => {
+  it('fetches the word and returns the mapped model', async () => {
     const fetchFn = jest.fn().mockResolvedValue(jsonResponse(200, VALID_BODY));
     const repository = createHttpDictionaryRepository(fetchFn);
 
@@ -44,13 +44,13 @@ describe('HttpDictionaryRepository', () => {
     ['not-found', jsonResponse(404, { title: 'No Definitions Found' })],
     ['server', htmlResponse(502)],
     ['invalid-response', jsonResponse(200, { unexpected: true })],
-  ])('classifica a resposta como "%s"', async (kind, response) => {
+  ])('classifies the response as "%s"', async (kind, response) => {
     const repository = createHttpDictionaryRepository(jest.fn().mockResolvedValue(response));
 
     await expect(repository.getWordDetails('word')).rejects.toMatchObject({ kind });
   });
 
-  it('classifica corpo que não é JSON como "invalid-response"', async () => {
+  it('classifies a non-JSON body as "invalid-response"', async () => {
     const response = { ...htmlResponse(200), ok: true, status: 200 } as Response;
     const repository = createHttpDictionaryRepository(jest.fn().mockResolvedValue(response));
 
@@ -59,14 +59,14 @@ describe('HttpDictionaryRepository', () => {
     });
   });
 
-  it('classifica falha de conexão como "network"', async () => {
+  it('classifies a connection failure as "network"', async () => {
     const fetchFn = jest.fn().mockRejectedValue(new TypeError('Network request failed'));
     const repository = createHttpDictionaryRepository(fetchFn);
 
     await expect(repository.getWordDetails('word')).rejects.toMatchObject({ kind: 'network' });
   });
 
-  describe('timeout e cancelamento', () => {
+  describe('timeout and cancellation', () => {
     beforeEach(() => jest.useFakeTimers());
     afterEach(() => jest.useRealTimers());
 
@@ -79,7 +79,7 @@ describe('HttpDictionaryRepository', () => {
       );
     }
 
-    it('aborta e classifica como "timeout" quando a API não responde', async () => {
+    it('aborts and classifies as "timeout" when the API does not respond', async () => {
       const repository = createHttpDictionaryRepository(hangingFetch(), 10_000);
 
       const request = repository.getWordDetails('word');
@@ -88,7 +88,7 @@ describe('HttpDictionaryRepository', () => {
       await expect(request).rejects.toMatchObject({ kind: 'timeout' });
     });
 
-    it('propaga o cancelamento sem convertê-lo em erro de domínio', async () => {
+    it('propagates cancellation without converting it to a domain error', async () => {
       const repository = createHttpDictionaryRepository(hangingFetch());
       const caller = new AbortController();
 

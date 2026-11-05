@@ -16,7 +16,7 @@ function createRepository() {
 }
 
 describe('useWordList', () => {
-  it('carrega a primeira página e expõe a lista achatada', async () => {
+  it('loads the first page and exposes a flattened list', async () => {
     const { repository, listWords } = createRepository();
     listWords.mockResolvedValueOnce({ words: ['apple', 'azure'], nextCursor: 'azure' });
 
@@ -33,7 +33,7 @@ describe('useWordList', () => {
     expect(result.current.hasNextPage).toBe(true);
   });
 
-  it('busca a próxima página a partir do cursor e acumula os resultados', async () => {
+  it('fetches the next page from the cursor and accumulates results', async () => {
     const { repository, listWords } = createRepository();
     listWords
       .mockResolvedValueOnce({ words: ['apple', 'azure'], nextCursor: 'azure' })
@@ -53,7 +53,7 @@ describe('useWordList', () => {
     expect(result.current.hasNextPage).toBe(false);
   });
 
-  it('normaliza o termo de busca antes de consultar', async () => {
+  it('normalizes the search term before querying', async () => {
     const { repository, listWords } = createRepository();
     listWords.mockResolvedValueOnce({ words: ['hello'], nextCursor: null });
 
@@ -66,7 +66,7 @@ describe('useWordList', () => {
     );
   });
 
-  it('expõe o erro quando o repositório falha', async () => {
+  it('exposes the error when the repository fails', async () => {
     const { repository, listWords } = createRepository();
     listWords.mockRejectedValueOnce(new Error('disk I/O error'));
 

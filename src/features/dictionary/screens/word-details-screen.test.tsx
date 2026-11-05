@@ -43,7 +43,7 @@ describe('WordDetailsScreen', () => {
     onlineManager.setOnline(true);
   });
 
-  it('mostra o esqueleto enquanto os significados carregam', async () => {
+  it('shows the skeleton while meanings load', async () => {
     await renderScreen(
       'hello',
       jest.fn(() => new Promise(() => {})),
@@ -54,7 +54,7 @@ describe('WordDetailsScreen', () => {
     expect(screen.getByRole('header', { name: 'hello' })).toBeOnTheScreen();
   });
 
-  it('avisa que está offline e não mostra o esqueleto', async () => {
+  it('shows the offline message instead of the skeleton', async () => {
     onlineManager.setOnline(false);
     const getWordDetails = jest.fn();
 
@@ -65,7 +65,7 @@ describe('WordDetailsScreen', () => {
     expect(getWordDetails).not.toHaveBeenCalled();
   });
 
-  it('mostra a palavra e a fonética com o sotaque', async () => {
+  it('shows the word and the phonetic with its accent', async () => {
     await renderScreen('hello', jest.fn().mockResolvedValue(HELLO));
 
     expect(await screen.findByText('/həˈləʊ/')).toBeOnTheScreen();
@@ -73,7 +73,7 @@ describe('WordDetailsScreen', () => {
     expect(screen.getByRole('header', { name: 'hello' })).toBeOnTheScreen();
   });
 
-  it('informa a ausência de definição sem oferecer nova tentativa', async () => {
+  it('reports a missing definition without offering a retry', async () => {
     await renderScreen('aalii', jest.fn().mockRejectedValue(new DictionaryError('not-found')));
 
     expect(await screen.findByText('Sem definição para esta palavra')).toBeOnTheScreen();
@@ -86,7 +86,7 @@ describe('WordDetailsScreen', () => {
     );
   });
 
-  it('permite tentar novamente após erro do servidor', async () => {
+  it('allows retrying after a server error', async () => {
     const getWordDetails = jest.fn().mockRejectedValue(new DictionaryError('server'));
     await renderScreen('hello', getWordDetails);
 

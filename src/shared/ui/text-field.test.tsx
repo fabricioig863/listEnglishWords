@@ -6,7 +6,7 @@ import { renderWithProviders } from '@/test-utils/render';
 import { TextField } from './text-field';
 
 describe('TextField', () => {
-  it('mostra e oculta a senha', async () => {
+  it('shows and hides the password', async () => {
     await renderWithProviders(<TextField label="Senha" icon={Lock} isPassword value="secret1" />);
 
     const input = screen.getByLabelText('Senha');
@@ -18,7 +18,7 @@ describe('TextField', () => {
     expect(screen.getByRole('button', { name: 'Ocultar senha' })).toBeOnTheScreen();
   });
 
-  it('exibe o erro como alerta acessível no lugar da dica', async () => {
+  it('renders the error as an accessible alert instead of the hint', async () => {
     await renderWithProviders(
       <TextField label="E-mail" icon={Mail} hint="Use seu e-mail" error="E-mail inválido." />,
     );

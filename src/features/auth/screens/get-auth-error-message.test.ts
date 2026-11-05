@@ -3,17 +3,17 @@ import { AuthError } from '../domain/auth-error';
 import { getAuthErrorMessage } from './get-auth-error-message';
 
 describe('getAuthErrorMessage', () => {
-  it('não revela se o erro foi no e-mail ou na senha', () => {
+  it('does not reveal whether the email or the password was wrong', () => {
     expect(getAuthErrorMessage(new AuthError('invalid-credentials'))).toBe(
       'E-mail ou senha incorretos.',
     );
   });
 
-  it('orienta o usuário quando o e-mail já tem conta', () => {
+  it('guides the user when the email is already registered', () => {
     expect(getAuthErrorMessage(new AuthError('email-in-use'))).toContain('Tente entrar');
   });
 
-  it('usa a mensagem genérica para erros desconhecidos', () => {
+  it('uses the generic message for unknown errors', () => {
     expect(getAuthErrorMessage(new Error('boom'))).toBe(
       'Não foi possível concluir agora. Tente novamente.',
     );

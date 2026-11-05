@@ -18,7 +18,7 @@ const MEANINGS: Meaning[] = [
 ];
 
 describe('MeaningsSection', () => {
-  it('mostra a quantidade de classes e a primeira classe selecionada', async () => {
+  it('shows the class count and the first class selected', async () => {
     await renderWithProviders(<MeaningsSection meanings={MEANINGS} />);
 
     expect(screen.getByText('2 classes')).toBeOnTheScreen();
@@ -27,7 +27,7 @@ describe('MeaningsSection', () => {
     expect(screen.getByText('“Hello, everyone.”')).toBeOnTheScreen();
   });
 
-  it('troca as definições ao selecionar outra classe', async () => {
+  it('switches definitions when another class is selected', async () => {
     await renderWithProviders(<MeaningsSection meanings={MEANINGS} />);
 
     await fireEvent.press(screen.getByRole('tab', { name: 'noun' }));
@@ -37,13 +37,13 @@ describe('MeaningsSection', () => {
     expect(screen.queryByText('A greeting.')).not.toBeOnTheScreen();
   });
 
-  it('usa o singular quando há uma única classe', async () => {
+  it('uses the singular when there is a single class', async () => {
     await renderWithProviders(<MeaningsSection meanings={[MEANINGS[0]]} />);
 
     expect(screen.getByText('1 classe')).toBeOnTheScreen();
   });
 
-  it('avisa quando não há significados', async () => {
+  it('shows a message when there are no meanings', async () => {
     await renderWithProviders(<MeaningsSection meanings={[]} />);
 
     expect(

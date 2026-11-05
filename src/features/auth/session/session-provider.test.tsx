@@ -46,7 +46,7 @@ function renderSession(repository: AuthRepository) {
 }
 
 describe('SessionProvider', () => {
-  it('restaura a sessão salva no aparelho', async () => {
+  it('restores the session stored on the device', async () => {
     const { repository } = createFakeRepository(ANA);
 
     await renderSession(repository);
@@ -54,7 +54,7 @@ describe('SessionProvider', () => {
     expect(await screen.findByText('logado: Ana')).toBeOnTheScreen();
   });
 
-  it('indica deslogado quando não há sessão', async () => {
+  it('reports signed out when there is no session', async () => {
     const { repository } = createFakeRepository(null);
 
     await renderSession(repository);
@@ -62,7 +62,7 @@ describe('SessionProvider', () => {
     expect(await screen.findByText('signed-out')).toBeOnTheScreen();
   });
 
-  it('reage a login e logout', async () => {
+  it('reacts to sign-in and sign-out', async () => {
     const { repository, emit } = createFakeRepository(null);
     await renderSession(repository);
     await screen.findByText('signed-out');
@@ -74,7 +74,7 @@ describe('SessionProvider', () => {
     expect(screen.getByText('signed-out')).toBeOnTheScreen();
   });
 
-  it('cancela a escuta ao desmontar', async () => {
+  it('unsubscribes on unmount', async () => {
     const { repository, unsubscribe } = createFakeRepository(null);
 
     const { unmount } = await renderSession(repository);

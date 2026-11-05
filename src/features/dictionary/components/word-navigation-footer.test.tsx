@@ -5,7 +5,7 @@ import { renderWithProviders } from '@/test-utils/render';
 import { WordNavigationFooter } from './word-navigation-footer';
 
 describe('WordNavigationFooter', () => {
-  it('aciona voltar e próximo', async () => {
+  it('triggers back and next', async () => {
     const onBack = jest.fn();
     const onNext = jest.fn();
     await renderWithProviders(
@@ -19,7 +19,7 @@ describe('WordNavigationFooter', () => {
     expect(onNext).toHaveBeenCalledTimes(1);
   });
 
-  it('desabilita o próximo no fim da lista', async () => {
+  it('disables next at the end of the list', async () => {
     const onNext = jest.fn();
     await renderWithProviders(
       <WordNavigationFooter onBack={jest.fn()} onNext={onNext} isNextDisabled />,

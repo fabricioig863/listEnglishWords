@@ -15,7 +15,7 @@ function renderUseNextWord(word: string, searchTerm: string, listWords: jest.Moc
 }
 
 describe('useNextWord', () => {
-  it('busca a palavra seguinte a partir da atual, respeitando o prefixo', async () => {
+  it('fetches the word after the current one within the prefix', async () => {
     const listWords = jest.fn().mockResolvedValue({ words: ['helm'], nextCursor: 'helm' });
 
     const { result } = await renderUseNextWord('hello', ' HeL ', listWords);
@@ -24,7 +24,7 @@ describe('useNextWord', () => {
     expect(listWords).toHaveBeenCalledWith({ limit: 1, cursor: 'hello', prefix: 'hel' });
   });
 
-  it('devolve null no fim da lista', async () => {
+  it('returns null at the end of the list', async () => {
     const listWords = jest.fn().mockResolvedValue({ words: [], nextCursor: null });
 
     const { result } = await renderUseNextWord('zyzzyva', '', listWords);

@@ -1,7 +1,7 @@
 import { formatSeconds, pickAudio } from './pronunciation';
 
 describe('pickAudio', () => {
-  it('prefere o sotaque americano', () => {
+  it('prefers the American accent', () => {
     const audio = pickAudio([
       { url: 'uk.mp3', accent: 'UK' },
       { url: 'us.mp3', accent: 'US' },
@@ -10,11 +10,11 @@ describe('pickAudio', () => {
     expect(audio?.url).toBe('us.mp3');
   });
 
-  it('usa áudio sem sotaque identificado como último recurso', () => {
+  it('uses audio without an identified accent as a last resort', () => {
     expect(pickAudio([{ url: 'x.mp3', accent: null }])?.url).toBe('x.mp3');
   });
 
-  it('retorna null sem áudios', () => {
+  it('returns null when there are no audios', () => {
     expect(pickAudio([])).toBeNull();
   });
 });

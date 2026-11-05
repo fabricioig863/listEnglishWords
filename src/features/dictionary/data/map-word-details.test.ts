@@ -40,7 +40,7 @@ const SET_RESPONSE: DictionaryResponseDto = [
 ];
 
 describe('mapWordDetails', () => {
-  it('separa textos fonéticos e áudios, identificando o sotaque pela URL', () => {
+  it('splits phonetic texts and audios, deriving the accent from the URL', () => {
     const details = mapWordDetails(HELLO_RESPONSE);
 
     expect(details.phonetics).toEqual([
@@ -53,7 +53,7 @@ describe('mapWordDetails', () => {
     ]);
   });
 
-  it('agrupa a mesma classe gramatical de entradas diferentes, preservando a ordem', () => {
+  it('merges the same part of speech across entries, preserving order', () => {
     const details = mapWordDetails(SET_RESPONSE);
 
     expect(details.meanings.map((meaning) => meaning.partOfSpeech)).toEqual(['verb', 'noun']);
@@ -63,19 +63,19 @@ describe('mapWordDetails', () => {
     ]);
   });
 
-  it('deduplica a fonética repetida entre entradas', () => {
+  it('deduplicates phonetics repeated across entries', () => {
     const details = mapWordDetails(SET_RESPONSE);
 
     expect(details.phonetics).toEqual([{ text: '/sɛt/', accent: 'US' }]);
   });
 
-  it('representa exemplo ausente como null', () => {
+  it('represents a missing example as null', () => {
     const details = mapWordDetails(SET_RESPONSE);
 
     expect(details.meanings[0].definitions[0].example).toBeNull();
   });
 
-  it('usa a fonética da entrada quando a lista de fonéticas não traz texto', () => {
+  it('falls back to the entry phonetic when phonetics have no text', () => {
     const details = mapWordDetails([
       { word: 'test', phonetic: '/tɛst/', phonetics: [], meanings: [] },
     ]);
@@ -85,7 +85,7 @@ describe('mapWordDetails', () => {
 });
 
 describe('dictionaryResponseSchema', () => {
-  it('aceita resposta sem campos opcionais', () => {
+  it('accepts a response without optional fields', () => {
     const result = dictionaryResponseSchema.safeParse([
       {
         word: 'test',
@@ -98,10 +98,10 @@ describe('dictionaryResponseSchema', () => {
   });
 
   it.each([
-    ['o corpo do 404', { title: 'No Definitions Found' }],
-    ['um array vazio', []],
-    ['uma entrada sem meanings', [{ word: 'test' }]],
-  ])('rejeita %s', (_, payload) => {
+    ['the 404 body', { title: 'No Definitions Found' }],
+    ['an empty array', []],
+    ['an entry without meanings', [{ word: 'test' }]],
+  ])('rejects %s', (_, payload) => {
     expect(dictionaryResponseSchema.safeParse(payload).success).toBe(false);
   });
 });

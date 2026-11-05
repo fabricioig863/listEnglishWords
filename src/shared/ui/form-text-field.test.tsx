@@ -26,7 +26,7 @@ function TestForm({ onSubmit }: { onSubmit: (values: z.infer<typeof schema>) => 
 }
 
 describe('FormTextField', () => {
-  it('mostra o erro do schema após tentar enviar e não envia', async () => {
+  it('shows the schema error after submitting and does not submit', async () => {
     const onSubmit = jest.fn();
     await renderWithProviders(<TestForm onSubmit={onSubmit} />);
 
@@ -37,7 +37,7 @@ describe('FormTextField', () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
-  it('envia os valores quando o campo é válido', async () => {
+  it('submits the values when the field is valid', async () => {
     const onSubmit = jest.fn();
     await renderWithProviders(<TestForm onSubmit={onSubmit} />);
 

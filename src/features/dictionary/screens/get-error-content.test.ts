@@ -9,19 +9,19 @@ describe('getErrorContent', () => {
     ['network', true, false],
     ['timeout', true, false],
     ['invalid-response', true, true],
-  ] as const)('"%s" → tentar novamente: %s, Wiktionary: %s', (kind, canRetry, showWiktionary) => {
+  ] as const)('"%s" → retry: %s, Wiktionary: %s', (kind, canRetry, showWiktionary) => {
     const content = getErrorContent(new DictionaryError(kind), 'hello');
 
     expect(content).toMatchObject({ canRetry, showWiktionary });
   });
 
-  it('trata erros desconhecidos como resposta inesperada', () => {
+  it('treats unknown errors as an unexpected response', () => {
     expect(getErrorContent(new Error('boom'), 'hello').title).toBe(
       'Não foi possível carregar a palavra',
     );
   });
 
-  it('menciona a palavra na mensagem de ausência de definição', () => {
+  it('mentions the word in the no-definition message', () => {
     expect(getErrorContent(new DictionaryError('not-found'), 'helluo').description).toContain(
       '“helluo”',
     );

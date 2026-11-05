@@ -6,7 +6,7 @@ describe('useDebouncedValue', () => {
   beforeEach(() => jest.useFakeTimers());
   afterEach(() => jest.useRealTimers());
 
-  it('só atualiza depois do intervalo sem mudanças', async () => {
+  it('updates only after the interval without changes', async () => {
     const { result, rerender } = await renderHook(
       ({ value }: { value: string }) => useDebouncedValue(value, 300),
       { initialProps: { value: 'h' } },
@@ -20,7 +20,7 @@ describe('useDebouncedValue', () => {
     expect(result.current).toBe('he');
   });
 
-  it('reinicia a contagem a cada nova mudança', async () => {
+  it('restarts the countdown on every change', async () => {
     const { result, rerender } = await renderHook(
       ({ value }: { value: string }) => useDebouncedValue(value, 300),
       { initialProps: { value: 'h' } },

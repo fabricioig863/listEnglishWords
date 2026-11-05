@@ -1,7 +1,7 @@
 import { toFavoriteItem, toHistoryItem } from './supabase-library-repository';
 
-describe('mapeamento das linhas do Supabase', () => {
-  it('converte favorito de snake_case para o modelo do app', () => {
+describe('Supabase row mapping', () => {
+  it('maps a favorite row from snake_case to the app model', () => {
     expect(
       toFavoriteItem({
         user_id: 'user-1',
@@ -22,7 +22,7 @@ describe('mapeamento das linhas do Supabase', () => {
     });
   });
 
-  it('converte item do histórico', () => {
+  it('maps a history row', () => {
     expect(
       toHistoryItem({
         user_id: 'user-1',

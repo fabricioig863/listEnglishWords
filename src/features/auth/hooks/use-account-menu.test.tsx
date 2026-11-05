@@ -48,13 +48,13 @@ describe('useAccountMenu', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Conta' }));
   }
 
-  it('mostra o nome e o e-mail do usuário', async () => {
+  it("shows the user's name and email", async () => {
     await openMenu(createRepository());
 
     expect(alertSpy).toHaveBeenCalledWith('Ana', 'ana@email.com', expect.any(Array));
   });
 
-  it('sai da conta ao confirmar', async () => {
+  it('signs out when confirmed', async () => {
     const repository = createRepository();
     await openMenu(repository);
 

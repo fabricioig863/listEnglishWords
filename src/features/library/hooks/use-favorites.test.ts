@@ -35,7 +35,7 @@ function renderFavorites(repository: LibraryRepository) {
 }
 
 describe('useToggleFavorite', () => {
-  it('desfaz a mudança otimista quando o servidor falha', async () => {
+  it('rolls back the optimistic update when the server fails', async () => {
     const repository = createRepository({
       addFavorite: jest.fn().mockRejectedValue(new Error('offline')),
     });
@@ -50,7 +50,7 @@ describe('useToggleFavorite', () => {
     expect(queryClient.getQueryData(libraryKeys.favorites(TEST_USER_ID))).toEqual([]);
   });
 
-  it('mantém o favorito após o servidor confirmar', async () => {
+  it('keeps the favorite after the server confirms', async () => {
     const repository = createRepository({
       listFavorites: jest
         .fn()

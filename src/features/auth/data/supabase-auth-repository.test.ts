@@ -18,7 +18,7 @@ function createFakeAuth(overrides: Partial<Record<keyof SupabaseAuth, jest.Mock>
 }
 
 describe('SupabaseAuthRepository', () => {
-  it('entra e converte o usuário para o modelo do app', async () => {
+  it('signs in and maps the user to the app model', async () => {
     const auth = createFakeAuth({
       signInWithPassword: jest
         .fn()
@@ -33,7 +33,7 @@ describe('SupabaseAuthRepository', () => {
     expect(user).toEqual({ id: 'user-1', email: 'ana@email.com', name: 'Ana' });
   });
 
-  it('converte o erro do Supabase em erro de domínio', async () => {
+  it('maps Supabase errors to domain errors', async () => {
     const auth = createFakeAuth({
       signInWithPassword: jest
         .fn()
@@ -45,7 +45,7 @@ describe('SupabaseAuthRepository', () => {
     ).rejects.toMatchObject({ kind: 'invalid-credentials' });
   });
 
-  it('envia o nome como metadado no cadastro', async () => {
+  it('sends the name as metadata on sign-up', async () => {
     const auth = createFakeAuth({
       signUp: jest.fn().mockResolvedValue({
         data: { user: SUPABASE_USER, session: { user: SUPABASE_USER } },
@@ -66,7 +66,7 @@ describe('SupabaseAuthRepository', () => {
     });
   });
 
-  it('falha se o cadastro não devolver sessão (confirmação de e-mail ligada)', async () => {
+  it('fails when sign-up returns no session (email confirmation enabled)', async () => {
     const auth = createFakeAuth({
       signUp: jest.fn().mockResolvedValue({
         data: { user: SUPABASE_USER, session: null },
@@ -79,7 +79,7 @@ describe('SupabaseAuthRepository', () => {
     ).rejects.toMatchObject({ kind: 'unknown' });
   });
 
-  it('cancela a escuta de sessão ao chamar a função devolvida', () => {
+  it('unsubscribes when the returned function is called', () => {
     const unsubscribe = jest.fn();
     const auth = createFakeAuth({
       onAuthStateChange: jest.fn().mockReturnValue({ data: { subscription: { unsubscribe } } }),

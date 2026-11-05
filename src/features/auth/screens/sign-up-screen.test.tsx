@@ -29,7 +29,7 @@ async function fillForm(values: {
 }
 
 describe('SignUpScreen', () => {
-  it('avisa quando as senhas não conferem e não envia', async () => {
+  it('warns when passwords do not match and does not submit', async () => {
     const signUp = jest.fn();
     await renderScreen(signUp);
 
@@ -44,7 +44,7 @@ describe('SignUpScreen', () => {
     expect(signUp).not.toHaveBeenCalled();
   });
 
-  it('envia nome e e-mail aparados, sem a confirmação de senha', async () => {
+  it('submits trimmed name and email without the password confirmation', async () => {
     const signUp = jest.fn().mockResolvedValue({ id: '1', email: 'ana@email.com', name: 'Ana' });
     await renderScreen(signUp);
 
@@ -64,7 +64,7 @@ describe('SignUpScreen', () => {
     );
   });
 
-  it('orienta a entrar quando o e-mail já tem conta', async () => {
+  it('suggests signing in when the email is already registered', async () => {
     const signUp = jest.fn().mockRejectedValue(new AuthError('email-in-use'));
     await renderScreen(signUp);
 

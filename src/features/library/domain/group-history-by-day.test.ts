@@ -14,7 +14,7 @@ function item(word: string, date: Date): HistoryItem {
 }
 
 describe('groupHistoryByDay', () => {
-  it('agrupa em Hoje, Ontem e data, preservando a ordem', () => {
+  it('groups into Hoje, Ontem and date, preserving order', () => {
     const sections = groupHistoryByDay(
       [
         item('helluo', new Date(2026, 10, 5, 10, 43)),
@@ -29,7 +29,7 @@ describe('groupHistoryByDay', () => {
     expect(sections[0].data.map((entry) => entry.word)).toEqual(['helluo', 'hello']);
   });
 
-  it('formata a hora com dois dígitos', () => {
+  it('formats the time with two digits', () => {
     expect(formatTime(new Date(2026, 10, 5, 9, 5))).toBe('09:05');
   });
 });

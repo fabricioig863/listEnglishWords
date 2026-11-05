@@ -24,7 +24,7 @@ function renderUseWordDetails(word: string, getWordDetails: jest.Mock) {
 }
 
 describe('useWordDetails', () => {
-  it('carrega os detalhes repassando o sinal de cancelamento', async () => {
+  it('loads details forwarding the cancellation signal', async () => {
     const getWordDetails = jest.fn().mockResolvedValue(HELLO);
 
     const { result } = await renderUseWordDetails('hello', getWordDetails);
@@ -33,7 +33,7 @@ describe('useWordDetails', () => {
     expect(getWordDetails).toHaveBeenCalledWith('hello', expect.anything());
   });
 
-  it('não tenta de novo quando a palavra não existe', async () => {
+  it('does not retry when the word does not exist', async () => {
     const getWordDetails = jest.fn().mockRejectedValue(new DictionaryError('not-found'));
 
     const { result } = await renderUseWordDetails('aalii', getWordDetails);
@@ -42,7 +42,7 @@ describe('useWordDetails', () => {
     expect(getWordDetails).toHaveBeenCalledTimes(1);
   });
 
-  it('não faz requisição para palavra vazia', async () => {
+  it('does not request an empty word', async () => {
     const getWordDetails = jest.fn();
 
     await renderUseWordDetails('', getWordDetails);
@@ -59,15 +59,15 @@ describe('shouldRetryWordDetails', () => {
     [2, 'server', false],
     [0, 'not-found', false],
     [0, 'invalid-response', false],
-  ] as const)('tentativa %i com erro "%s" → %s', (failureCount, kind, expected) => {
+  ] as const)('attempt %i with "%s" error → %s', (failureCount, kind, expected) => {
     expect(shouldRetryWordDetails(failureCount, new DictionaryError(kind))).toBe(expected);
   });
 
-  it('não repete erros desconhecidos', () => {
+  it('does not retry unknown errors', () => {
     expect(shouldRetryWordDetails(0, new Error('boom'))).toBe(false);
   });
 
-  it('marca a consulta para ser persistida em disco', async () => {
+  it('marks the query to be persisted to disk', async () => {
     const getWordDetails = jest.fn().mockResolvedValue(HELLO);
 
     const { result, queryClient } = await renderUseWordDetails('hello', getWordDetails);

@@ -7,16 +7,16 @@ function fakeQuery(status: Query['state']['status'], meta?: Query['meta']) {
 }
 
 describe('shouldPersistQuery', () => {
-  it('persiste consultas bem-sucedidas que pediram persistência', () => {
+  it('persists successful queries that opted in', () => {
     expect(shouldPersistQuery(fakeQuery('success', { persist: true }))).toBe(true);
   });
 
   it.each([
-    ['sem meta', fakeQuery('success')],
-    ['com persist false', fakeQuery('success', { persist: false })],
-    ['com erro', fakeQuery('error', { persist: true })],
-    ['ainda carregando', fakeQuery('pending', { persist: true })],
-  ])('não persiste consulta %s', (_, query) => {
+    ['without meta', fakeQuery('success')],
+    ['with persist false', fakeQuery('success', { persist: false })],
+    ['with an error', fakeQuery('error', { persist: true })],
+    ['still loading', fakeQuery('pending', { persist: true })],
+  ])('does not persist a query %s', (_, query) => {
     expect(shouldPersistQuery(query)).toBe(false);
   });
 });
