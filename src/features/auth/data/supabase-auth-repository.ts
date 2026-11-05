@@ -58,7 +58,7 @@ export function createSupabaseAuthRepository(auth: SupabaseAuth): AuthRepository
     },
 
     async signOut() {
-      const { error } = await auth.signOut();
+      const { error } = await auth.signOut({ scope: 'local' });
 
       if (error) {
         throw mapAuthError(error);
