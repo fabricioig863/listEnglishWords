@@ -9,6 +9,8 @@ import {
 import type { PropsWithChildren, ReactElement } from 'react';
 import { SafeAreaProvider, type Metrics } from 'react-native-safe-area-context';
 
+import { AuthRepositoryProvider } from '@/features/auth/di';
+import type { AuthRepository } from '@/features/auth/domain/auth-repository';
 import { DictionaryRepositoryProvider } from '@/features/dictionary/di';
 import type { DictionaryRepository } from '@/features/dictionary/domain/dictionary-repository';
 import { WordsRepositoryProvider } from '@/features/words/di';
@@ -18,6 +20,7 @@ import { theme } from '@/shared/theme/theme';
 export type TestDependencies = {
   wordsRepository?: WordsRepository;
   dictionaryRepository?: DictionaryRepository;
+  authRepository?: AuthRepository;
 };
 
 type ProviderOptions = {
@@ -59,6 +62,14 @@ function createWrapper({
         <DictionaryRepositoryProvider value={dependencies.dictionaryRepository}>
           {content}
         </DictionaryRepositoryProvider>
+      );
+    }
+
+    if (dependencies.authRepository) {
+      content = (
+        <AuthRepositoryProvider value={dependencies.authRepository}>
+          {content}
+        </AuthRepositoryProvider>
       );
     }
 
