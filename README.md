@@ -34,27 +34,27 @@ Aplicativo mobile para explorar palavras em inglês, com significados, fonética
 
 **Diferenciais**
 
-| Diferencial                   | Situação | Como                                                             |
-| ----------------------------- | -------- | ---------------------------------------------------------------- |
-| 1 — Áudio                     | ✅       | mp3 da API com fallback para voz sintetizada do aparelho         |
-| 2 — Injeção de dependência    | ✅       | Contexts tipados + composition root, sem biblioteca              |
-| 3 — Testes                    | ✅       | 142 testes (unitários, integração com SQLite real, hooks, telas) |
-| 4 — Login e dados por usuário | ✅       | Supabase Auth + Postgres com Row Level Security                  |
+| Diferencial                   | Situação | Como                                                     |
+| ----------------------------- | -------- | -------------------------------------------------------- |
+| 1 — Áudio                     | ✅       | mp3 da API com fallback para voz sintetizada do aparelho |
+| 2 — Injeção de dependência    | ✅       | Contexts tipados + composition root, sem biblioteca      |
+| 3 — Testes                    | ✅       | 142 testes + 2 fluxos E2E (Maestro)                      |
+| 4 — Login e dados por usuário | ✅       | Supabase Auth + Postgres com Row Level Security          |
 
 ## Tecnologias
 
-| Área              | Escolha                                                         |
-| ----------------- | --------------------------------------------------------------- |
-| Base              | React Native 0.88, Expo SDK 58, TypeScript 6, Expo Router       |
-| UI                | Restyle (tokens tipados), Lucide, Plus Jakarta Sans / Noto Sans |
-| Listas            | FlashList v2                                                    |
-| Dados locais      | expo-sqlite (banco pré-construído), expo-sqlite/kv-store        |
-| Estado assíncrono | TanStack Query (+ persister e onlineManager com NetInfo)        |
-| Formulários       | React Hook Form + zod                                           |
-| Backend           | Supabase (Auth + Postgres com RLS)                              |
-| Áudio             | expo-audio, expo-speech                                         |
-| Testes            | Jest (jest-expo), React Native Testing Library v14              |
-| Qualidade         | ESLint (com `import/order`), Prettier                           |
+| Área              | Escolha                                                           |
+| ----------------- | ----------------------------------------------------------------- |
+| Base              | React Native 0.88, Expo SDK 58, TypeScript 6, Expo Router         |
+| UI                | Restyle (tokens tipados), Lucide, Plus Jakarta Sans / Noto Sans   |
+| Listas            | FlashList v2                                                      |
+| Dados locais      | expo-sqlite (banco pré-construído), expo-sqlite/kv-store          |
+| Estado assíncrono | TanStack Query (+ persister e onlineManager com NetInfo)          |
+| Formulários       | React Hook Form + zod                                             |
+| Backend           | Supabase (Auth + Postgres com RLS)                                |
+| Áudio             | expo-audio, expo-speech                                           |
+| Testes            | Jest (jest-expo), React Native Testing Library v14, Maestro (E2E) |
+| Qualidade         | ESLint (com `import/order`), Prettier                             |
 
 ## Como executar
 
@@ -111,6 +111,25 @@ O projeto usa **Continuous Native Generation**: `ios/` e `android/` não são ve
 | Telas                | RNTL buscando por papel de acessibilidade (`findByRole('button', { name })`)                           |
 
 As rotas (`src/app/`) ficam fora da cobertura: são composição; a lógica vive nas features.
+
+### E2E (Maestro)
+
+Fluxos em [`.maestro/`](.maestro/), executados no app real:
+
+| Fluxo                  | Cobre                                                                     |
+| ---------------------- | ------------------------------------------------------------------------- |
+| `sign-up-and-sign-out` | Cadastro, login automático, rotas protegidas e logout                     |
+| `favorite-and-history` | Login, busca, detalhe, favoritar, Favoritos, Histórico e remover favorito |
+
+```bash
+# instalar: curl -fsSL "https://get.maestro.mobile.dev" | bash
+npx expo run:ios --configuration Release
+npm run test:e2e -- -e E2E_EMAIL=<conta-de-teste> -e E2E_PASSWORD=<senha>
+```
+
+- A conta de teste deve começar **sem favoritos** (o fluxo favorita e remove, ficando idempotente).
+- Elementos de ação usam `testID` (rótulos se repetem; identificadores não).
+- No simulador iOS, desligue o AutoFill de senhas para evitar painéis do sistema sobre os campos.
 
 ## Arquitetura
 
@@ -210,6 +229,7 @@ O script [`scripts/build-words-db.mjs`](scripts/build-words-db.mjs) gera `assets
 | Feature `library` única                   | Favoritos e histórico compartilham snapshot, repositório e padrão de chaves                   | Duas features duplicadas                   |
 | Voz sintetizada como fallback de áudio    | Nativa, offline, sem chave de API                                                             | ResponsiveVoice                            |
 | Sessão no `kv-store`                      | Simples e suficiente para o desafio (área privada do app)                                     | SecureStore (limite de tamanho no Android) |
+| Dark mode pelo tema do sistema            | Paleta escura nos mesmos tokens semânticos (paridade checada pelo TypeScript)                 | Tema fixo claro                            |
 | Tradução das definições                   | Não pedida; exigiria API externa, custo e latência; o app é "inglês → significados"           | Traduzir para português                    |
 
 ## Problemas encontrados
@@ -235,9 +255,7 @@ O script [`scripts/build-words-db.mjs`](scripts/build-words-db.mjs) gera `assets
 
 Escopo deixado de fora conscientemente, priorizando os requisitos e a qualidade do que foi entregue:
 
-- **Testes E2E (Maestro):** os fluxos críticos (login, favoritar, histórico) estão cobertos por testes de componente; o E2E seria o próximo passo.
 - **Recuperação de senha:** exige deep link e tela de redefinição.
-- **Dark mode:** o design só define a paleta clara; o tema já separa paleta e tokens semânticos.
 - **Marcadores "vista/favorita" no grid, deslizar para excluir e animações** (ex.: pulso no skeleton).
 - **Sessão criptografada** (SecureStore + chave para dados grandes).
 - **Projeto Supabase gratuito pausa após 7 dias sem uso:** se o login falhar, reative o projeto no painel ou crie o seu com a migration acima.
