@@ -11,6 +11,7 @@ Aplicativo mobile para explorar palavras em inglês, com significados, fonética
 - [Como executar](#como-executar)
 - [Testes](#testes)
 - [Arquitetura](#arquitetura)
+- [Configuração do projeto](#configuração-do-projeto)
 - [Base de palavras](#base-de-palavras)
 - [Dicionário, cache e offline](#dicionário-cache-e-offline)
 - [Autenticação e dados por usuário](#autenticação-e-dados-por-usuário)
@@ -133,39 +134,295 @@ npm run test:e2e -- -e E2E_EMAIL=<conta-de-teste> -e E2E_PASSWORD=<senha>
 
 ## Arquitetura
 
-Organização por **funcionalidade**, com camadas leves dentro de cada uma:
+### Princípios
 
-```
-src/
-  app/            rotas (Expo Router) — compõem features, sem regra de negócio
-  features/
-    words/        lista local (SQLite), busca, próximo
-    dictionary/   definições (Free Dictionary API), detalhe, pronúncia
-    auth/         login, cadastro, sessão
-    library/      favoritos e histórico (Supabase)
-      domain/     contratos e regras puras (sem React, sem SDKs)
-      data/       implementações (SQLite, HTTP, Supabase)
-      hooks/      estado assíncrono (TanStack Query)
-      components/ e screens/
-  di/             composition root
-  shared/         tema, UI, providers, utilitários
-  test-utils/     render com providers e dependências fake
+1. **Organização por funcionalidade.** Cada feature (`words`, `dictionary`, `auth`, `library`) contém tudo o que precisa: contratos, implementações, hooks, componentes e telas.
+2. **Dependências em uma direção.** Rotas compõem features; features dependem de `shared`; `shared` não conhece ninguém. Uma feature **nunca** importa outra.
+3. **Domínio isolado de frameworks.** `domain/` não importa React, Supabase nem `fetch` — só tipos, regras puras e contratos. É o que torna as regras testáveis sem simular nada.
+4. **Implementações substituíveis.** Telas e hooks dependem de contratos; o composition root decide se a implementação é SQLite, HTTP, Supabase ou um fake de teste.
+5. **Proporcionalidade.** Sem use cases que só repassam chamadas, sem biblioteca de DI, sem estado global desnecessário — cada abstração existe porque resolve um problema concreto.
+
+### Visão em camadas
+
+```mermaid
+flowchart TB
+    subgraph APP["src/app — rotas (composição, sem regra de negócio)"]
+        direction LR
+        RT["(tabs)"]
+        RW["word/[word]"]
+        RA["(auth)"]
+    end
+
+    subgraph FEAT["src/features"]
+        direction LR
+        W["words<br/>lista local · busca · próximo"]
+        D["dictionary<br/>definições · detalhe · pronúncia"]
+        A["auth<br/>login · cadastro · sessão"]
+        L["library<br/>favoritos · histórico"]
+    end
+
+    ROOT["src/di — composition root<br/>liga contratos às implementações"]
+
+    subgraph SHARED["src/shared"]
+        direction LR
+        UI["ui · theme"]
+        LIB["lib<br/>query client · supabase · env"]
+        DIH["di<br/>createInjectionContext · CurrentUser"]
+    end
+
+    APP --> FEAT
+    APP --> ROOT
+    ROOT --> FEAT
+    FEAT --> SHARED
+    ROOT --> SHARED
 ```
 
-**Regras de dependência:** uma feature não importa outra; `shared/` não conhece features. Quando duas features precisam conversar (ex.: o detalhe da palavra mostra o botão de favorito e o "Próximo" da lista), **a rota compõe** usando _slots_ (`headerAction`, `footer`) — a tela do dicionário não sabe que favoritos existem.
+### Camadas dentro de uma feature
+
+```mermaid
+flowchart LR
+    SC["screens / components"] --> HK["hooks<br/>(TanStack Query)"]
+    HK --> DI["di.ts<br/>useXRepository()"]
+    DI -. "contrato" .-> DOM["domain<br/>tipos · regras puras · interfaces"]
+    IMPL["data<br/>SQLite · HTTP · Supabase"] -. "implementa" .-> DOM
+    ROOT["src/di (app)"] -- "injeta" --> DI
+    FAKE["test-utils (testes)"] -- "injeta fake" --> DI
+    ROOT --> IMPL
+```
+
+| Pasta         | Responsabilidade                                                  | Pode importar           |
+| ------------- | ----------------------------------------------------------------- | ----------------------- |
+| `domain/`     | Modelos, regras puras, contratos (`interface XRepository`), erros | Nada de framework       |
+| `data/`       | Implementações: SQL, HTTP + zod + mapper, Supabase                | `domain`, SDKs          |
+| `hooks/`      | Estado assíncrono, cache, chaves de query, atualização otimista   | `domain`, `di`          |
+| `components/` | UI da feature, sem buscar dados                                   | `shared/ui`             |
+| `screens/`    | Orquestram hooks, estados (loading/erro/vazio) e navegação        | tudo da própria feature |
+| `di.ts`       | Declara as dependências da feature (`createInjectionContext`)     | `domain`                |
+
+### Fluxo de dados: abrir uma palavra
+
+```mermaid
+sequenceDiagram
+    actor U as Usuário
+    participant R as Rota word/[word]
+    participant S as WordDetailsScreen
+    participant Q as TanStack Query
+    participant P as Persister (kv-store)
+    participant H as HttpDictionaryRepository
+    participant API as Free Dictionary API
+    participant LB as library (Supabase)
+
+    U->>R: toca em "hello"
+    R->>S: word="hello" + slots (favorito, rodapé)
+    S->>Q: useWordDetails("hello")
+    alt já em cache (memória ou disco)
+        Q-->>S: dados imediatos (inclusive offline)
+    else sem cache
+        Q->>H: getWordDetails(word, signal)
+        H->>API: GET /entries/en/hello (timeout 10 s)
+        API-->>H: JSON
+        H->>H: zod valida → mapper agrupa e deduplica
+        H-->>Q: WordDetails ou DictionaryError(kind)
+        Q->>P: persiste (meta.persist)
+        Q-->>S: sucesso / erro / pausado (offline)
+    end
+    R->>LB: recordView(snapshot) — uma vez por palavra
+```
+
+### Fluxo de autenticação
+
+```mermaid
+sequenceDiagram
+    actor U as Usuário
+    participant F as SignInScreen
+    participant M as useSignIn (mutation)
+    participant AR as SupabaseAuthRepository
+    participant SB as Supabase Auth
+    participant SP as SessionProvider
+    participant N as Stack.Protected
+
+    U->>F: e-mail + senha
+    F->>F: React Hook Form + zod valida
+    F->>M: mutate(values)
+    M->>AR: signIn()
+    AR->>SB: signInWithPassword
+    SB-->>AR: sessão (ou erro → AuthError.kind)
+    SB-->>SP: onAuthStateChange(session)
+    SP->>SP: status = signed-in
+    SP->>N: guard muda
+    N-->>U: redireciona para a lista
+    Note over F,N: Nenhuma tela chama router.push após login/logout:<br/>a navegação é consequência do estado da sessão.
+```
+
+### Composição entre features (slots)
+
+O detalhe da palavra precisa de dados de **três** features, sem que elas se conheçam. A rota faz a composição:
+
+```mermaid
+flowchart LR
+    subgraph ROUTE["src/app/word/[word].tsx"]
+        SNAP["monta WordSnapshot<br/>a partir de WordDetails"]
+    end
+    D["dictionary<br/>WordDetailsScreen"]
+    W["words<br/>useNextWord"]
+    L["library<br/>FavoriteButton · useRecordView"]
+
+    ROUTE -- "headerAction" --> D
+    ROUTE -- "footer (Voltar/Próximo)" --> D
+    W --> ROUTE
+    L --> ROUTE
+```
+
+A tela do dicionário recebe `headerAction` e `footer` como _slots_ (`ReactNode`): ela não sabe que favoritos ou a lista existem. Da mesma forma, `CurrentUserBridge` no composition root lê a sessão (`auth`) e entrega apenas o id do usuário à `library`.
+
+### Por que funções e não classes (e não Clean Architecture completa)
+
+Repositórios são **factories que retornam objetos** que satisfazem uma interface, e não classes:
+
+```ts
+export function createSqliteWordsRepository(db: WordsDatabase): WordsRepository {
+  return {
+    async listWords({ limit, cursor, prefix }) {
+      /* ... */
+    },
+  };
+}
+```
+
+| Critério                  | Factory + closure                                                                   | Classe                                                           |
+| ------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Estado / herança          | Não há estado mutável nem hierarquia — a closure guarda só as dependências          | Recursos (herança, `this`, visibilidade) que não seriam usados   |
+| `this`                    | Inexistente: métodos podem ser passados como callback sem `bind`                    | Perder o `this` ao repassar um método é um bug clássico          |
+| Contrato                  | A interface é a fonte de verdade; o TypeScript checa o objeto retornado             | `implements` faz o mesmo, com mais cerimônia                     |
+| Testes                    | Injeta-se a dependência como argumento (`db`, `fetchFn`, `auth`); fakes são objetos | Exige construtor/mocks de classe                                 |
+| Ecossistema React         | Mesmo estilo de hooks e componentes (funções)                                       | Mistura de paradigmas                                            |
+| Decorators / DI de classe | Desnecessários                                                                      | Inversify/tsyringe exigem `reflect-metadata` (atrito com Hermes) |
+
+Classes aparecem apenas onde agregam: os erros de domínio (`DictionaryError`, `AuthError`) estendem `Error` para manter stack trace e permitir `instanceof` como _type guard_.
+
+**Sobre Clean Architecture:** aplicamos seus princípios — domínio independente de frameworks, dependências apontando para dentro, implementações substituíveis — sem a cerimônia completa. Use cases foram omitidos porque, neste escopo, cada um seria uma função que apenas repassa a chamada ao repositório; os hooks já fazem o papel de camada de aplicação (cache, retry, atualização otimista). Se surgissem regras que orquestram vários repositórios, um use case passaria a se justificar.
 
 ### Injeção de dependência
 
-Cada feature declara o que precisa com `createInjectionContext<T>()` — um Context tipado que **falha imediatamente** se o provider estiver ausente. O composition root (`src/di/`) fornece as implementações reais; `test-utils` fornece fakes.
-
-```
-Tela → hook → useXRepository() → contrato (domain)
-                                     ↑
-               src/di: implementação real (SQLite / HTTP / Supabase)
-               test-utils: jest.fn / fake
-```
+Cada feature declara o que precisa com `createInjectionContext<T>()` — um Context tipado que **falha imediatamente** se o provider estiver ausente. O composition root (`src/di/`) fornece as implementações reais; `test-utils` fornece fakes com a mesma árvore de providers.
 
 InversifyJS/tsyringe foram descartados: dependem de decorators e `reflect-metadata` (atrito com Babel/Hermes) para um ganho que o Context já entrega.
+
+## Configuração do projeto
+
+### Estrutura de pastas
+
+```
+.
+├── .maestro/                    fluxos E2E (Maestro)
+├── assets/db/words.db           base de palavras pré-construída (5,1 MB)
+├── docs/                        design (HTML) e enunciado
+├── scripts/build-words-db.mjs   gera o words.db (node:sqlite, sem dependências)
+├── supabase/migrations/         SQL versionado (tabelas + RLS)
+└── src/
+    ├── app/                     rotas (Expo Router)
+    ├── di/app-dependencies.tsx  composition root
+    ├── features/
+    │   ├── words/               SQLite · paginação por cursor · busca · próximo
+    │   ├── dictionary/          API · zod · mapper · detalhe · skeleton · pronúncia
+    │   ├── auth/                Supabase Auth · sessão · formulários
+    │   └── library/             favoritos · histórico · snapshot
+    ├── shared/
+    │   ├── theme/               paleta, tokens claro/escuro, fontes
+    │   ├── ui/                  Box, Text, Button, TextField, Screen, Skeleton…
+    │   ├── lib/                 query client, persister, online manager, supabase, env
+    │   ├── database/            configuração do SQLite
+    │   ├── di/                  createInjectionContext, CurrentUser
+    │   ├── hooks/               useDebouncedValue
+    │   └── providers/           AppProviders
+    └── test-utils/              renderWithProviders / renderHookWithProviders
+```
+
+### Rotas (Expo Router)
+
+```
+src/app/
+├── _layout.tsx           fontes · splash · providers · Stack com Stack.Protected
+├── (auth)/               só deslogado  → se logado, redirectTo "/"
+│   ├── sign-in.tsx
+│   └── sign-up.tsx
+├── (tabs)/               só logado     → se deslogado, redirectTo "/sign-in"
+│   ├── _layout.tsx       header + seletor segmentado (expo-router/ui, headless)
+│   ├── index.tsx         Palavras
+│   ├── history.tsx       Histórico
+│   └── favorites.tsx     Favoritos
+└── word/[word].tsx       detalhe, empilhado sobre as abas (protegido)
+```
+
+| URL                    | Tela                                            |
+| ---------------------- | ----------------------------------------------- |
+| `/`                    | Palavras (grid + busca)                         |
+| `/history`             | Histórico                                       |
+| `/favorites`           | Favoritos                                       |
+| `/word/hello?q=hel`    | Detalhe; `q` mantém o "Próximo" dentro da busca |
+| `/sign-in`, `/sign-up` | Autenticação                                    |
+
+- Grupos `(…)` organizam sem aparecer na URL.
+- `typedRoutes` tipa `router.push` — uma rota inexistente não compila.
+- Arquivos de rota só reexportam telas das features (exceto `word/[word]`, que compõe três features).
+- "Próximo" usa `router.replace`: avançar várias palavras não empilha telas.
+
+### Árvore de providers
+
+```
+SafeAreaProvider
+└── PersistQueryClientProvider       cache + persistência opt-in (kv-store)
+    └── SQLiteProvider                abre words-v1.db (copiado do bundle)
+        └── ThemeProvider             claro/escuro conforme o sistema
+            └── AppDependencies       composition root
+                ├── Words/Dictionary/Library/Auth repository providers
+                └── SessionProvider → CurrentUserBridge
+                    └── RootNavigator (splash até resolver a sessão · Stack.Protected)
+```
+
+### Estado e dados
+
+| Dado                  | Onde vive                | Ferramenta                          | Persistência                   |
+| --------------------- | ------------------------ | ----------------------------------- | ------------------------------ |
+| Lista de palavras     | SQLite (somente leitura) | `useInfiniteQuery`                  | arquivo do app                 |
+| Definições            | Free Dictionary API      | `useQuery` + retry + persister      | kv-store (1 semana)            |
+| Favoritos e histórico | Supabase (RLS)           | `useQuery` / `useMutation` otimista | servidor                       |
+| Sessão                | Supabase Auth            | `SessionProvider` (Context)         | kv-store, renovação automática |
+| Formulários           | componente               | React Hook Form + zod               | —                              |
+| UI local (aba, busca) | componente               | `useState`                          | —                              |
+
+### Tema e design system
+
+- **Restyle** com tokens em duas camadas: `palette` (valores crus) → `colors` (papéis semânticos). Telas usam apenas tokens; nenhum hex.
+- **Dark mode**: `darkColors: typeof lightColors` garante paridade de tokens em tempo de compilação; o tema troca ao vivo com `useColorScheme`.
+- **Tipografia**: variantes (`display`, `word`, `body`, `phonetic`…), uma família de fonte por peso (e itálico) — no Android, `fontWeight` não seleciona arquivo de fonte customizada.
+- **Primitivos** em `shared/ui`: `Box`, `Text`, `Icon`, `Button`, `IconButton`, `TextField`, `FormTextField`, `Card`, `Screen`, `Skeleton`, `StateMessage`.
+
+### Qualidade e ferramentas
+
+| Ferramenta     | Configuração                                                                       |
+| -------------- | ---------------------------------------------------------------------------------- |
+| TypeScript 6   | `strict`; `types: ["jest", "node"]` explícitos; tipos do banco gerados do Supabase |
+| ESLint         | `eslint-config-expo` + Prettier + `import/order` (externos → `@/` → `../` → `./`)  |
+| Prettier       | aspas simples, `printWidth` 100; VS Code formata e corrige ao salvar               |
+| Jest           | `jest-expo`; mapper do Lucide para CJS; FlashList em `transformIgnorePatterns`     |
+| React Compiler | habilitado (`experiments.reactCompiler`)                                           |
+| Maestro        | fluxos E2E com `testID` nos elementos de ação                                      |
+
+### Configuração nativa (`app.json`)
+
+- **Continuous Native Generation**: `ios/` e `android/` não são versionadas; o `app.json` é a fonte única.
+- **Plugins**: `expo-router`, `expo-splash-screen`, `expo-font`, `expo-sqlite`, `expo-audio`.
+- `userInterfaceStyle: "automatic"` (dark mode), `typedRoutes`, `reactCompiler`.
+
+### Variáveis de ambiente
+
+| Variável                               | Descrição                          |
+| -------------------------------------- | ---------------------------------- |
+| `EXPO_PUBLIC_SUPABASE_URL`             | URL do projeto Supabase            |
+| `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Chave pública (`sb_publishable_…`) |
+
+Validadas com zod na inicialização; uma chave que não seja publishable impede o app de iniciar.
 
 ## Base de palavras
 
