@@ -113,7 +113,7 @@ export function FavoritesScreen() {
           left={20}
           right={20}
           bottom={20}
-          bg="text"
+          bg="inverseSurface"
           borderRadius="m"
           paddingHorizontal="l"
           paddingVertical="m"
@@ -122,11 +122,11 @@ export function FavoritesScreen() {
           justifyContent="space-between"
           accessibilityLiveRegion="polite"
         >
-          <Text variant="label" color="onAccent" flex={1}>
+          <Text variant="label" color="onInverseSurface" flex={1}>
             “{removed.word}” removida dos favoritos
           </Text>
           <Pressable onPress={undoRemoval} accessibilityRole="button" hitSlop={8}>
-            <Text variant="labelStrong" color="highlight">
+            <Text variant="labelStrong" color="inverseAccent">
               Desfazer
             </Text>
           </Pressable>

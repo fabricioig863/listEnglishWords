@@ -7,6 +7,7 @@ import {
   PlusJakartaSans_700Bold,
   PlusJakartaSans_800ExtraBold,
 } from '@expo-google-fonts/plus-jakarta-sans';
+import { useTheme } from '@shopify/restyle';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -16,6 +17,7 @@ import { AppDependencies } from '@/di/app-dependencies';
 import { useSession } from '@/features/auth/session/session-provider';
 import { setupOnlineManager } from '@/shared/lib/online-manager';
 import { AppProviders } from '@/shared/providers/app-providers';
+import type { Theme } from '@/shared/theme/theme';
 
 SplashScreen.preventAutoHideAsync();
 setupOnlineManager();
@@ -24,6 +26,7 @@ function RootNavigator() {
   const session = useSession();
   const isSessionResolved = session.status !== 'loading';
   const isSignedIn = session.status === 'signed-in';
+  const { colors } = useTheme<Theme>();
 
   useEffect(() => {
     if (isSessionResolved) {
@@ -36,7 +39,9 @@ function RootNavigator() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}
+    >
       <Stack.Protected guard={isSignedIn} redirectTo="/sign-in">
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="word/[word]" />

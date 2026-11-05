@@ -3,6 +3,7 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { SQLiteProvider } from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
 import { useState, type PropsWithChildren } from 'react';
+import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { WORDS_DATABASE } from '@/shared/database/words-database';
@@ -12,10 +13,11 @@ import {
   shouldPersistQuery,
 } from '@/shared/lib/query-client';
 import { QUERY_CACHE_VERSION, queryPersister } from '@/shared/lib/query-persister';
-import { theme } from '@/shared/theme/theme';
+import { darkTheme, theme } from '@/shared/theme/theme';
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(createQueryClient);
+  const colorScheme = useColorScheme();
 
   return (
     <SafeAreaProvider>
@@ -32,8 +34,9 @@ export function AppProviders({ children }: PropsWithChildren) {
           databaseName={WORDS_DATABASE.name}
           assetSource={{ assetId: WORDS_DATABASE.asset }}
         >
-          <ThemeProvider theme={theme}>
-            <StatusBar style="dark" />
+          <ThemeProvider theme={colorScheme === 'dark' ? darkTheme : theme}>
+            <StatusBar style="auto" />
+
             {children}
           </ThemeProvider>
         </SQLiteProvider>
