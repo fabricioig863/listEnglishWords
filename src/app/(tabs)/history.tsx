@@ -1,7 +1,1 @@
-import { History } from 'lucide-react-native';
-
-import { StateMessage } from '@/shared/ui/state-message';
-
-export default function HistoryRoute() {
-  return <StateMessage icon={History} title="Histórico" description="Disponível na Etapa 6" />;
-}
+export { HistoryScreen as default } from '@/features/library/screens/history-screen';

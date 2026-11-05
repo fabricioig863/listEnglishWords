@@ -1,7 +1,1 @@
-import { Heart } from 'lucide-react-native';
-
-import { StateMessage } from '@/shared/ui/state-message';
-
-export default function FavoriteRoute() {
-  return <StateMessage icon={Heart} title="Favoritos" description="Disponível na Etapa 6" />;
-}
+export { FavoritesScreen as default } from '@/features/library/screens/favorites-screen';
