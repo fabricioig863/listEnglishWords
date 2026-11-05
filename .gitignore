@@ -42,9 +42,6 @@ yarn-error.*
 .env*.local
 !.env.example
 
-# Claude Code MCP config (local tooling)
-.mcp.json
-
 # typescript
 *.tsbuildinfo
 
