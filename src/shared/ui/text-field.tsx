@@ -1,6 +1,6 @@
 import { useTheme } from '@shopify/restyle';
 import { CircleAlert, Eye, EyeOff, Info, type LucideIcon } from 'lucide-react-native';
-import { useState } from 'react';
+import { ComponentRef, Ref, useState } from 'react';
 import { Pressable, TextInput, type TextInputProps } from 'react-native';
 
 import { fonts } from '@/shared/theme/fonts';
@@ -16,6 +16,7 @@ type TextFieldProps = Omit<TextInputProps, 'style' | 'secureTextEntry'> & {
   error?: string;
   hint?: string;
   isPassword?: boolean;
+  ref?: Ref<ComponentRef<typeof TextInput>>;
 };
 
 export function TextField({
@@ -24,6 +25,7 @@ export function TextField({
   error,
   hint,
   isPassword = false,
+  ref,
   ...inputProps
 }: TextFieldProps) {
   const { colors, borderRadii } = useTheme<Theme>();
@@ -41,6 +43,7 @@ export function TextField({
 
         <TextInput
           {...inputProps}
+          ref={ref}
           accessibilityLabel={label}
           secureTextEntry={isPassword && !isPasswordVisible}
           placeholderTextColor={colors.placeholder}
