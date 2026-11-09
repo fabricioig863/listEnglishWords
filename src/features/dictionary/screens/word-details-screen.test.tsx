@@ -11,6 +11,10 @@ import { WordDetailsScreen } from './word-details-screen';
 
 jest.mock('expo-router', () => ({ useRouter: () => ({ back: jest.fn() }) }));
 jest.mock('expo-web-browser', () => ({ openBrowserAsync: jest.fn() }));
+jest.mock('@react-native-community/netinfo', () => ({
+  addEventListener: jest.fn(() => jest.fn()),
+  refresh: jest.fn().mockResolvedValue({ isConnected: true, isInternetReachable: true }),
+}));
 
 const HELLO: WordDetails = {
   word: 'hello',
@@ -52,6 +56,17 @@ describe('WordDetailsScreen', () => {
     expect(screen.getByTestId('meanings-skeleton')).toBeOnTheScreen();
     expect(screen.getByText('Buscando significados…')).toBeOnTheScreen();
     expect(screen.getByRole('header', { name: 'hello' })).toBeOnTheScreen();
+  });
+
+  it('retries after connectivity is restored from the offline state', async () => {
+    onlineManager.setOnline(false);
+    const getWordDetails = jest.fn().mockResolvedValue(HELLO);
+    await renderScreen('hello', getWordDetails);
+
+    await fireEvent.press(await screen.findByRole('button', { name: 'Tentar novamente' }));
+
+    expect(await screen.findByText('/həˈləʊ/')).toBeOnTheScreen();
+    expect(getWordDetails).toHaveBeenCalledTimes(1);
   });
 
   it('shows the offline message instead of the skeleton', async () => {

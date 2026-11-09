@@ -17,6 +17,7 @@ export function useWordList(searchTerm = '') {
 
   return useInfiniteQuery({
     queryKey: wordListKeys.list(prefix),
+    networkMode: 'always',
     gcTime: 5 * 60 * 1000,
     queryFn: ({ pageParam }) =>
       repository.listWords({ limit: WORD_LIST_PAGE_SIZE, cursor: pageParam, prefix }),

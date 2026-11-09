@@ -5,6 +5,7 @@ import { ArrowLeft, ExternalLink, WifiOff } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { ActivityIndicator, ScrollView } from 'react-native';
 
+import { resumeNetworkRequests } from '@/shared/lib/online-manager';
 import type { Theme } from '@/shared/theme/theme';
 import { Box } from '@/shared/ui/box';
 import { Card } from '@/shared/ui/card';
@@ -44,6 +45,7 @@ export function WordDetailsScreen({ word, footer, headerAction }: WordDetailsScr
           icon={WifiOff}
           title="Você está offline"
           description="Os significados aparecem assim que a conexão voltar."
+          primaryAction={{ label: 'Tentar novamente', onPress: resumeNetworkRequests }}
         />
       );
     }
